@@ -1,0 +1,172 @@
+% 文字コードは UTF-8
+% xelatex で組版する
+\documentclass[a4paper]{bxjsarticle}
+\usepackage{zxjatype}
+\setjamainfont{IPAMincho}
+\setjasansfont{IPAGothic}
+\setjamonofont{IPAGothic}
+\xeCJKDeclareCharClass{CJK}{`■,`※}
+\usepackage{metalogo}
+\usepackage{shortvrb}
+\MakeShortVerb{\|}
+\newcommand{\PkgVersion}{0.2a}
+\newcommand{\Pkg}[1]{\textsf{#1}}
+\newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
+\newcommand{\Note}{\par\noindent ※}
+\newcommand{\Means}{：\ }
+\providecommand{\pTeX}{p\TeX}
+\providecommand{\pLaTeX}{p\LaTeX}
+%-----------------------------------------------------------
+\begin{document}
+\title{\Pkg{zxjafont} パッケージ（v\PkgVersion）}
+\author{八登崇之\ （Takayuki YATO; aka.~``ZR''）}
+\date{2013/01/28}
+\maketitle
+
+%===========================================================
+\section{概要}
+
+{\XeLaTeX} + fontspec でのフォントファミリ名を直接指定する方式は
+「好きなフォントを指定する」という点では、
+{\pLaTeX}\>よりも格段に使い易いが、
+日本語を扱うためには必ず何らかの設定を行う必要があり、
+これが煩わしく感じられる場合もある。
+本パッケージでは、{\pLaTeX}\>において
+一般的に行われている設定を予め用意しておいて、
+簡単に呼び出せるようにしている。
+
+\paragraph{前提フォーマット}
+{\XeLaTeX}。
+
+\paragraph{依存パッケージ}
+\begin{itemize}
+\item \Pkg{fontspec}パッケージ
+\end{itemize}
+
+%===========================================================
+\section{使い方}
+
+以下のようにパッケージを読み込むだけである。
+（ユーザ命令・環境はない。）
+\begin{quote}\small
+|\usepackage[|\Meta{メイン設定}|,|\Meta{サブ設定}|,|%
+\Meta{他オプション}|]{zxjafont}|
+\end{quote}
+
+\Meta{メイン設定}は1つだけ指定できるが、
+\Meta{サブ設定}と\Meta{他オプション}は任意個数指定可能である。
+もし\Pkg{fontspec}が未読込の場合は自動的に読み込む。
+{\XeLaTeX}\>には和文と欧文の元来の区別がないので、
+このパッケージで指定するフォントが全ての文字に通用する。
+ただし、\Pkg{zxjatype}パッケージでは和文と欧文を区別するので、
+それと併用の場合は和文のみにフォント設定が適用される。
+
+\subsection{メイン設定}
+
+総称ファミリの設定
+（\Meta{fontspec}の|\setmainfont|、|\setsansfont|、|\setmonofont|）
+を行うもの。
+
+\paragraph{単ウェイト用の設定}
+明朝・ゴシック各々1ウェイトのみを用いる設定。
+セリフ（|\rmfamily|）に明朝、
+サンセリフ（|\sffamily|）と等幅（|\ttfamily|）にゴシックを割り当てる。
+さらに、{\pLaTeX}\>の習慣に合わせて、
+セリフの太字（|\bfseries|）もゴシックにする。
+（これは必ずしも好ましい設定ではないことに注意。）
+
+\begin{itemize}
+\item |ms|\Means
+MS フォント（「ＭＳ 明朝」「ＭＳ ゴシック」）を使用する。
+\item |ipa|\Means
+IPAフォント（「IPA明朝」「IPAゴシック」）を使用する。
+%ver.003でもver.002でも同じ（フォント名が同じだから）である。
+\item |kozuka4|\Means
+Pro仕様の小塚フォント（「小塚明朝 Pro R」「小塚ゴシック Pro M」）
+を使用する。
+\item |kozuka6|\Means
+Pr6仕様の小塚フォント（「小塚明朝 Pro-VI R」「小塚ゴシック Pro-VI M」）
+を使用する。
+\item |kozuka6n|\Means
+Pr6N仕様の小塚フォント（「小塚明朝 Pr6N R」「小塚ゴシック Pr6N M」）
+を使用する。
+\item |hiragino|\Means
+ヒラギノフォント「ヒラギノ明朝 Pro W3」「ヒラギノ角ゴ Pro W6」
+を使用する。
+\end{itemize}
+
+\paragraph{多ウェイト用の設定}
+明朝・ゴシック各々2ウェイトを用いる設定。%
+\footnote{\Pkg{fontspec}では3ウェイト以上の設定ができない。）}
+セリフに明朝、サンセリフと等幅にゴシックを割り当て、
+各々について通常（|\mdseries|）と太字（|\bfseries|）
+を個別に設定する。
+\begin{itemize}
+\item |ms-dx|\Means
+MSフォントおよびMicrosoft Office付属の日本語フォントを使用する。
+\item |ipa-dx|\Means
+IPAフォントおよびMicrosoft Office付属の日本語フォントを使用する。
+\item |hiragino-dx|\Means
+ヒラギノフォント「ヒラギノ明朝 Pro W3・W6」「ヒラギノ角ゴ Pro W3・W6」
+を使用する。
+\end{itemize}
+\Note {\XeTeX}\>は「フォント非埋込のPDF生成」に対応していない。
+
+\subsection{サブ設定}
+
+\Pkg{fontspec}では使用するフォントを |\newfontfamily| 命令で
+増やすことができる。
+それを利用した追加設定である。
+
+\begin{itemize}
+\item |hg|\Means
+Microsoft Officeのフォント（HGフォント）に対応する、
+以下のファミリ命令が定義される。
+\begin{itemize}
+\item |\hgmcfamily|\Means HGS明朝B、太字=HGS明朝E。
+\item |\hgprfamily|\Means HGS創英ﾌﾟﾚｾﾞﾝｽEB
+\item |\hggtfamily|\Means HGSｺﾞｼｯｸM、太字=HGSｺﾞｼｯｸE。
+\item |\hggufamily|\Means HGS創英角ｺﾞｼｯｸUB
+\item |\hgmgfamily|\Means HG丸ｺﾞｼｯｸM-PRO
+\item |\hgkkfamily|\Means HGS教科書体
+\item |\hgksfamily|\Means HG正楷書体-PRO
+\item |\hggsfamily|\Means HGS行書体
+\item |\hgppfamily|\Means HGS創英角ﾎﾟｯﾌﾟ体
+\end{itemize}
+\item |hiraginomg|\Means
+ヒラギノの丸ゴシックを使う設定。
+\begin{itemize}
+\item |\hmgfamily|\Means ヒラギノ丸ゴ Pro W4
+\end{itemize}
+\end{itemize}
+\Note \Pkg{fontspec}では取り扱うフォントのウェイトを通常（|\mdseries|）
+と太字（|\bfseries|）の2つに制限している。
+多くのOSでの扱いに合わせているようである。
+
+\subsection{他オプション}
+
+\begin{itemize}
+\item |prop|\Means
+プロポーショナル幅のフォントを用いる。
+例えば、「IPA明朝」の代わりに「IPA P明朝」、
+「HGS行書体」の代わりに「HGP行書体」を指定する。
+既定で用いるのは等幅のフォントだが、
+「欧文のみプロポーショナル」の変種（HGフォントの場合「HGS～」名称のもの）
+がある場合はそれを優先させている。
+\Note \Pkg{zxjatype}を用いる場合は、
+和文は等幅フォントを用いることが前提なので、
+このオプションは指定できない（エラーになる）。
+
+\item |scale=|\Meta{実数}\Means
+スケール値（\Pkg{fontspec}の |Scale| 属性の値）。
+既定値は、\Pkg{BXjscls}の文書クラスおよび
+\Pkg{zxjatype}パッケージで指定されている場合はその値、
+なければ1となる。
+
+\item |feature={|\Meta{属性リスト}|}|\Means
+このパッケージで指定されるフォント全体に通用する
+\Pkg{fontspec}の属性の指定。
+
+\end{itemize}
+
+\end{document}

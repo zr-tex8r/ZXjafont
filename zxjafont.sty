@@ -3,7 +3,7 @@
 %
 %%%% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{zxjafont}[2009/12/22 v0.2]
+\ProvidesPackage{zxjafont}[2013/01/28 v0.2a]
 \RequirePackage{ifxetex}
 \RequireXeTeX
 
@@ -68,14 +68,44 @@
   \zxjf@propfalse
 \fi\fi
 
+%% provides \zxJaScale if absent
+\ifzxjf@zxjatype
+  \unless\ifdefined\zxJaScale
+    \ifdefined\zxjt@scale
+      \let\zxJaScale\zxjt@scale
+    \else\ifcsname __zxjt_scale_tl\endcsname
+      \expandafter\let\expandafter\zxJaScale
+       \csname __zxjt_scale_tl\endcsname
+    \else 
+    \fi\fi
+  \fi
+\fi
+
 %%%% decide scale factor
 \ifx\zxjf@scale\relax
-  \ifzxjf@zxjatype \let\zxjf@scale\zxjt@scale
-  \else\ifx\jsDocClass\@undefined \def\zxjf@scale{1}%
-  \else \let\zxjf@scale\jsScale \fi\fi
+  % If zxjatype is used, try \zxJaScale, \zxjt@scale,
+  % and \__zxjt_scale_tl.
+  \ifzxjf@zxjatype
+    \ifdefined\zxJaScale \let\zxjf@scale\zxJaScale
+    \else\ifdefined\zxjt@scale \let\zxjf@scale\zxjt@scale
+    \else\ifcsname __zxjt_scale_tl\endcsname
+      \expandafter\let\expandafter\zxjf@scale
+       \csname __zxjt_scale_tl\endcsname
+    \fi\fi\fi
+  \fi
+  \ifx\zxjf@scale\relax % still unknown
+    % Try \Cjascale and \jsScale.
+    \ifdefined\Cjascale \let\zxjf@scale\Cjascale
+    \else\ifdefined\jsScale \let\zxjf@scale\jsScale
+    \fi\fi
+  \fi
+  \ifx\zxjf@scale\relax % still unknown
+    \def\zxjf@scale{1}%
+  \fi
 \fi
 \edef\zxjf@xfeat{Scale=\zxjf@scale,\zxjf@feat}
-\zxjf@debug{feat={\zxjf@feat}/preset=\zxjf@main@preset/\zxjf@sub@preset}
+\zxjf@debug{scale=\zxjf@scale/feat={\zxjf@feat}/%
+  preset=\zxjf@main@preset/\zxjf@sub@preset}
 
 %%-------- preset japanese font mappings
 

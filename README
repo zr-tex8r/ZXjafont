@@ -1,5 +1,5 @@
 ==================================================
-== ZXjatype バンドル v0.2  <2009/12/22>         ==
+== ZXjafont バンドル v0.2a <2013/01/28>         ==
 ==           by「ZR」（八登 崇之/Takayuki YATO）==
 ==                      <zrbabbler@yahoo.co.jp> ==
 ==================================================
@@ -15,14 +15,14 @@ XeLaTeX + fontspec でのフォントファミリ名を直接指定する方式�
     ・TeX 処理系： XeLaTeX
     ・前提パッケージ： fontspec
 
-■ 本ソフトウェアの一次配布サイト(作者のサイト)
+■ 本ソフトウェアの作者のサイト
 
     En toi Pythmeni tes TeXnopoleos ～電脳世界の奥底にて～
-    http://zrbabbler.hp.infoseek.co.jp/
+    http://zrbabbler.sp.land.to/
 
     ※ 以下のページに一部機能の使用例を紹介した。
     「ZXjafont パッケージ」
-    http://zrbabbler.hp.infoseek.co.jp/zxjafont.html
+    http://zrbabbler.sp.land.to/zxjafont.html
 
 ■ インストール
 
@@ -33,18 +33,11 @@ XeLaTeX + fontspec でのフォントファミリ名を直接指定する方式�
     ・*.sty   → C:\usr\local\share\texmf-local\tex\xelatex\zxjafont
 
 ----------------------------------------
-  zxjafont パッケージ (v0.2) -- 本体
-----------------------------------------
-
-    まだ解説が書けておりません…。基本的な機能の説明については以下の Web
-    ページで行っていますのでそちらを参照してください。
-
-    ZXjafont パッケージ
-    http://zrbabbler.hp.infoseek.co.jp/zxjafont.html
-
-----------------------------------------
 
 ■ 更新履歴
+
+Version 0.2a <2013/01/28>
+  - 最初の公開版。
 
 Version 0.2  <2009/12/22>
   - 最初の公開版。

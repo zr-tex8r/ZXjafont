@@ -9,7 +9,7 @@
 \usepackage{metalogo}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
-\newcommand{\PkgVersion}{0.2a}
+\newcommand{\PkgVersion}{0.3}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
@@ -20,7 +20,7 @@
 \begin{document}
 \title{\Pkg{zxjafont} パッケージ（v\PkgVersion）}
 \author{八登崇之\ （Takayuki YATO; aka.~``ZR''）}
-\date{2013/01/28}
+\date{2015/05/08}
 \maketitle
 
 %===========================================================
@@ -64,8 +64,15 @@
 \subsection{メイン設定}
 
 総称ファミリの設定
-（\Meta{fontspec}の|\setmainfont|、|\setsansfont|、|\setmonofont|）
+（\Pkg{fontspec}の|\setmainfont|、|\setsansfont|、|\setmonofont|）
 を行うもの。
+
+\Note 「メイン設定」は\Pkg{pxchfon}パッケージにおける
+「プリセット設定」をそのまま
+（ただし明朝・ゴシック2ウェイトに縮減して）
+引き継いでいる。
+設定内容の詳細については、\Pkg{pxchfon}の説明書を
+参照してほしい。
 
 \paragraph{単ウェイト用の設定}
 明朝・ゴシック各々1ウェイトのみを用いる設定。
@@ -77,23 +84,13 @@
 
 \begin{itemize}
 \item |ms|\Means
-MS フォント（「ＭＳ 明朝」「ＭＳ ゴシック」）を使用する。
+MS フォント。
 \item |ipa|\Means
-IPAフォント（「IPA明朝」「IPAゴシック」）を使用する。
-%ver.003でもver.002でも同じ（フォント名が同じだから）である。
-\item |kozuka4|\Means
-Pro仕様の小塚フォント（「小塚明朝 Pro R」「小塚ゴシック Pro M」）
-を使用する。
-\item |kozuka6|\Means
-Pr6仕様の小塚フォント（「小塚明朝 Pro-VI R」「小塚ゴシック Pro-VI M」）
-を使用する。
-\item |kozuka6n|\Means
-Pr6N仕様の小塚フォント（「小塚明朝 Pr6N R」「小塚ゴシック Pr6N M」）
-を使用する。
-\item |hiragino|\Means
-ヒラギノフォント「ヒラギノ明朝 Pro W3」「ヒラギノ角ゴ Pro W6」
-を使用する。
+IPAフォント。
+\item |ipaex|\Means
+IPAexフォント。
 \end{itemize}
+\Note {\XeTeX}\>は「フォント非埋込のPDF生成」に対応していない。
 
 \paragraph{多ウェイト用の設定}
 明朝・ゴシック各々2ウェイトを用いる設定。%
@@ -102,15 +99,58 @@ Pr6N仕様の小塚フォント（「小塚明朝 Pr6N R」「小塚ゴシック
 各々について通常（|\mdseries|）と太字（|\bfseries|）
 を個別に設定する。
 \begin{itemize}
-\item |ms-dx|\Means
-MSフォントおよびMicrosoft Office付属の日本語フォントを使用する。
-\item |ipa-dx|\Means
-IPAフォントおよびMicrosoft Office付属の日本語フォントを使用する。
-\item |hiragino-dx|\Means
-ヒラギノフォント「ヒラギノ明朝 Pro W3・W6」「ヒラギノ角ゴ Pro W3・W6」
-を使用する。
+\item |ms-hg|\Means
+  MSフォント + HGフォント。
+  \Note HGフォント = Microsoft Office 付属の日本語フォント
+\item |ipa-hg|\Means
+  IPAフォント + HGフォント。
+\item |ipaex-hg|\Means
+  IPAexフォント + HGフォント。
+\item |moga|\Means
+  Mogaフォント（2004JIS字形）。
+  \Note MogaEx系統が用いられる。
+\item |moga-90|\Means
+  Mogaフォント（90／2000JIS字形）。
+  \Note MogaEx90系統が用いられる。
+\item |kozuka-pro|\Means
+  小塚フォント（Pro版）。
+\item |kozuka-pr6|\Means
+  小塚フォント（Pr6版）。
+\item |kozuka-pr6n|\Means
+  小塚フォント（Pr6n版）。
+\item |hiragino-pro|\Means
+  ヒラギノフォント基本6書体セット（Pro/Std版）。
+\item |morisawa-pro|\Means
+  モリサワフォント基本7書体（Pro版）。
+\item |hiragino-pron|\Means
+  ヒラギノフォント基本6書体セット（ProN/StdN版）。
+\item |morisawa-pr6n|\Means
+  モリサワフォント基本7書体（Pr6N版）。
+\item |yu-win|\Means
+  游書体（Windows搭載版）。
+\item |yu-osx|\Means
+  游書体（Mac OS X搭載版）。
 \end{itemize}
-\Note {\XeTeX}\>は「フォント非埋込のPDF生成」に対応していない。
+
+\paragraph{旧版の設定}
+
+v0.2a版以前で用意されていたメイン設定。
+現在の版でも使用は可能であるが非推奨である。
+
+\begin{itemize}
+\item |kozuka4|\Means
+  小塚フォント（Pro版）の単ウェイト使用。
+\item |kozuka6|\Means
+  小塚フォント（Pr6版）の単ウェイト使用。
+\item |kozuka6n|\Means
+  小塚フォント（Pr6n版）の単ウェイト使用。
+\item |hiragino|\Means
+  ヒラギノフォント（Pro版）の単ウェイト使用。
+\item |ms-dx|\Means |ms-hg| の別名。
+\item |ipa-dx|\Means |ipa-hg| の別名。
+\item |hiragino-dx|\Means |hiragino-pro| の別名。
+\item |moga-mobo|\Means |moga| の別名。※\Pkg{pxchfon}互換用。
+\end{itemize}
 
 \subsection{サブ設定}
 
@@ -133,10 +173,29 @@ Microsoft Officeのフォント（HGフォント）に対応する、
 \item |\hggsfamily|\Means HGS行書体
 \item |\hgppfamily|\Means HGS創英角ﾎﾟｯﾌﾟ体
 \end{itemize}
+
 \item |hiraginomg|\Means
 ヒラギノの丸ゴシックを使う設定。
 \begin{itemize}
 \item |\hmgfamily|\Means ヒラギノ丸ゴ Pro W4
+\end{itemize}
+
+\item |mobo|\Means
+Moboフォント（2004JIS字形）を使う設定。
+\begin{itemize}
+\item |\mobofamily|\Means Moboフォント（2004JIS字形）
+\end{itemize}
+
+\item |mobo-90|\Means
+Moboフォント（90／2000JIS字形）を使う設定。
+\begin{itemize}
+\item |\mobofamily|\Means Moboフォント（90／2000JIS字形）
+\end{itemize}
+
+\item |maruberi|\Means
+マルベリフォントを使う設定。
+\begin{itemize}
+\item |\mmgfamily|\Means モトヤLマルベリ3等幅
 \end{itemize}
 \end{itemize}
 \Note \Pkg{fontspec}では取り扱うフォントのウェイトを通常（|\mdseries|）
@@ -146,6 +205,12 @@ Microsoft Officeのフォント（HGフォント）に対応する、
 \subsection{他オプション}
 
 \begin{itemize}
+\item |oneweight|\Means
+複数ウェイト用のメイン設定を単ウェイトとして用いる。
+\Note \Pkg{pxchfon}の説明書において |\setminchofont|
+と |\setgothicfont| で設定されているウェイトのフォント
+が用いられる。
+
 \item |prop|\Means
 プロポーショナル幅のフォントを用いる。
 例えば、「IPA明朝」の代わりに「IPA P明朝」、

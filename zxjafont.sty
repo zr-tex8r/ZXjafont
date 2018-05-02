@@ -28,7 +28,20 @@
 \RequirePackage{keyval}
 \RequirePackage{etoolbox}
 
+%% errors
+\def\zxjf@err@ivval#1#2{%
+  \PackageError\zxjf@pkgname
+   {Invalid value '#2' for option #1}\@ehc}
+
 %--------------------------------------- handle options
+
+%% constants
+\chatdef\zxjf@cjkshape@@none=0
+\chatdef\zxjf@cjkshape@@xc=1    % 90jis
+\chatdef\zxjf@cjkshape@@mmiv=2  % jis2004
+
+%% variables
+\let\zxjf@cjkshape\zxjf@cjkshape@@none
 
 %% \zxjf@main@preset
 \def\zxjf@all@main@preset{%
@@ -57,7 +70,10 @@
 \DeclareOption{prop}{\zxjf@proptrue}
 \newif\ifzxjf@oneweight
 \DeclareOption{oneweight}{\zxjf@oneweighttrue}
-\define@key{zxjf}{scale}{\def\zxjf@scale{#1}}
+% '90jis'/'jis2004'
+\DeclareOption{90jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@xc}
+\DeclareOption{jis2004}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
+
 % options using keyval
 \let\zxjf@scale\relax
 \define@key{zxjf}{scale}{\def\zxjf@scale{#1}}
@@ -111,7 +127,17 @@
     \def\zxjf@scale{1}%
   \fi
 \fi
+
+%% resolve CJKshape
+\edef\zxjf@feat{%
+  \ifcase\zxjf@cjkshape % none
+  \or CJKShape=JIS1990,% 90jis
+  \or CJKShape=JIS2004,% jis2004
+  \fi
+  \zxjf@feat}
+
 \edef\zxjf@xfeat{Scale=\zxjf@scale,\zxjf@feat}
+
 \zxjf@debug{scale=\zxjf@scale/feat={\zxjf@feat}/%
   preset=\zxjf@main@preset/\zxjf@sub@preset}
 

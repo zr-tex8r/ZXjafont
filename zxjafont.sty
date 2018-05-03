@@ -1,23 +1,35 @@
-%
-% zxjafont.sty
-%
-%%%% package declaration
-\NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{zxjafont}[2015/05/08 v0.3]
-\RequirePackage{ifxetex}
-\RequireXeTeX
+%%
+%% This is file 'zxjafont.sty'.
+%%
+%% Copyright (c) 2018 Takayuki YATO (aka. "ZR")
+%%   GitHub:   https://github.com/zr-tex8r
+%%   Twitter:  @zr_tex8r
+%%
+%% This package is distributed under the MIT License.
+%%
 
-%%%% preparation
+%% package declaration
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{zxjafont}[2018/05/03 v0.4-pre]
 \def\zxjf@pkgname{zxjafont}
+
+%% preparation
+\RequirePackage{ifxetex}\RequireXeTeX
 \def\zxjf@error{\PackageError\zxjf@pkgname}
 \def\zxjf@warn{\PackageInfo\zxjf@pkgname}
-\RequirePackage{fontspec}
-\RequirePackage{keyval}
 \ifx\bxUseDebug\relax \let\zxjf@debug\@gobble
 \else \def\zxjf@debug#1{\typeout{\zxjf@pkgname: #1}}
 \fi
 
-%%%% options handling
+%--------------------------------------- general
+
+%% packages
+\RequirePackage{fontspec}
+\RequirePackage{keyval}
+\RequirePackage{etoolbox}
+
+%--------------------------------------- handle options
+
 %% \zxjf@main@preset
 \def\zxjf@all@main@preset{%
   ms,ipa,ipaex,%
@@ -64,7 +76,7 @@
    \space\space\zxjf@all@main@preset}
   \endinput\fi
 
-%%%% detect bxjatype
+%% detect bxjatype
 \newif\ifzxjf@zxjatype
 \@ifpackageloaded{zxjatype}{\zxjf@zxjatypetrue}{}
 \AtBeginDocument{%
@@ -76,7 +88,7 @@
   \zxjf@propfalse
 \fi\fi
 
-%%%% decide scale factor
+%% decide scale factor
 \ifx\zxjf@scale\relax
   % If zxjatype is used, try \JaFontScale, \zxjt@scale,
   % and \__zxjt_scale_tl.
@@ -102,7 +114,7 @@
 \zxjf@debug{scale=\zxjf@scale/feat={\zxjf@feat}/%
   preset=\zxjf@main@preset/\zxjf@sub@preset}
 
-%%-------- preset japanese font mappings
+%--------------------------------------- font setup helpers
 
 %% \zxjf@setmainfont{<attributes>}{<fam_name>}, etc.
 \ifzxjf@zxjatype
@@ -121,6 +133,8 @@
 \def\zxjf@newfamily#1#2{%
   \expandafter\newfontfamily\csname #1family\endcsname[\zxjf@xfeat,#2]}
 \fi
+
+%--------------------------------------- preset japanese font mappings
 
 %% \zxjf@declare@preset{<name>}{<text>}, etc.
 \def\zxjf@declare@preset#1{%
@@ -342,11 +356,11 @@
 \zxjf@declare@preset{maruberi}{%
   \zxjf@newfamily{mmg}{}{MotoyaLMaru}}
 
-%%%% ... and invokes the specified one!
+%% ... and invokes the specified one!
 \zxjf@use@preset{\zxjf@main@preset}
 \@for\zxjf@x:=\zxjf@sub@preset\do{\zxjf@use@preset\zxjf@x}
 
-%%------ and some extras
+%--------------------------------------- and some extras
 
 \def\useeasyjapanesesettings{%
 \XeTeXlinebreaklocale "ja"\relax
@@ -354,6 +368,6 @@
 \XeTeXlinebreakpenalty=0\relax
 }
 
-%%------ all done
+%--------------------------------------- all done
 \endinput
 %% EOF

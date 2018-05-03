@@ -1,26 +1,27 @@
 % 文字コードは UTF-8
 % xelatex で組版する
-\documentclass[a4paper]{bxjsarticle}
-\usepackage{zxjatype}
-\setjamainfont{IPAMincho}
-\setjasansfont{IPAGothic}
-\setjamonofont{IPAGothic}
+\documentclass[xelatex,ja=standard,a4paper]{bxjsarticle}
 \xeCJKDeclareCharClass{CJK}{`■,`※}
-\usepackage{metalogo}
+\usepackage{color}
+\definecolor{myblue}{rgb}{0,0,0.75}
+\definecolor{mygreen}{rgb}{0,0.45,0}
+\usepackage[colorlinks,hyperfootnotes=false]{hyperref}
+\hypersetup{linkcolor=myblue,urlcolor=mygreen}
+\usepackage{bxtexlogo}
+\bxtexlogoimport{*}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
 \newcommand{\PkgVersion}{0.3}
+\newcommand{\PkgDate}{0.3}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
 \newcommand{\Means}{：\ }
-\providecommand{\pTeX}{p\TeX}
-\providecommand{\pLaTeX}{p\LaTeX}
 %-----------------------------------------------------------
 \begin{document}
 \title{\Pkg{zxjafont} パッケージ（v\PkgVersion）}
 \author{八登崇之\ （Takayuki YATO; aka.~``ZR''）}
-\date{2015/05/08}
+\date{v\PkgVersion\quad[\PkgDate]}
 \maketitle
 
 %===========================================================
@@ -61,10 +62,11 @@
 ただし、\Pkg{zxjatype}パッケージでは和文と欧文を区別するので、
 それと併用の場合は和文のみにフォント設定が適用される。
 
+%-------------------
 \subsection{メイン設定}
 
 総称ファミリの設定
-（\Pkg{fontspec}の|\setmainfont|、|\setsansfont|、|\setmonofont|）
+（\Pkg{fontspec}の |\setmainfont|、|\setsansfont|、|\setmonofont|）
 を行うもの。
 
 \Note 「メイン設定」は\Pkg{pxchfon}パッケージにおける
@@ -93,8 +95,8 @@ IPAexフォント。
 \Note {\XeTeX}\>は「フォント非埋込のPDF生成」に対応していない。
 
 \paragraph{多ウェイト用の設定}
-明朝・ゴシック各々2ウェイトを用いる設定。%
-\footnote{\Pkg{fontspec}では3ウェイト以上の設定ができない。）}
+明朝・ゴシック各々2ウェイトを用いる設定
+\footnote{\Pkg{fontspec}では3ウェイト以上の設定ができない。）}。
 セリフに明朝、サンセリフと等幅にゴシックを割り当て、
 各々について通常（|\mdseries|）と太字（|\bfseries|）
 を個別に設定する。
@@ -120,22 +122,49 @@ IPAexフォント。
   小塚フォント（Pr6n版）。
 \item |hiragino-pro|\Means
   ヒラギノフォント基本6書体セット（Pro/Std版）。
-\item |morisawa-pro|\Means
-  モリサワフォント基本7書体（Pro版）。
 \item |hiragino-pron|\Means
   ヒラギノフォント基本6書体セット（ProN/StdN版）。
+\item |morisawa-pro|\Means
+  モリサワフォント基本7書体（Pro版）。
 \item |morisawa-pr6n|\Means
   モリサワフォント基本7書体（Pr6N版）。
 \item |yu-win|\Means
-  游書体（Windows搭載版）。
+  游書体（Windows~8.1搭載版）。
+\item |yu-win10|\Means
+  游書体（Windows~10搭載版）。%TODO
 \item |yu-osx|\Means
   游書体（Mac OS X搭載版）。
+\item |sourcehan|\Means
+  Source Han Serif（源ノ明朝）+ Source Han Sans（源ノ角ゴシック）、
+  非サブセット版%TODO
+  \footnote{つまり、地域別サブセットOTF版以外のもの。
+    後掲の |noto| も同じ。}。
+\item |noto|\Means
+  Noto Serif CJK + Noto Sans CJK、
+  非サブセット版。
 \end{itemize}
+
+\paragraph{ptex-fontmaps互換のオプション}
+
+\Pkg{ptex-fontmaps}のプリセット名を別名として用意した。
+
+\begin{itemize}
+\item |kozuka|\Means
+  |kozuka-pro| の別名。%TODO
+\item |morisawa|\Means
+  |morisawa-pro| の別名。%TODO
+\end{itemize}
+
+\Note なお、|hiragino-pro| と同義の\Pkg{ptex-fontmaps}の
+プリセット名は |hiragino| であるが、本パッケージの |hiragino| は
+旧版の非推奨の設定であり |hiragino-pro| とは異なる。
 
 \paragraph{旧版の設定}
 
-v0.2a版以前で用意されていたメイン設定。
-現在の版でも使用は可能であるが非推奨である。
+v0.2a版以前で用意されていたメイン設定で、現在では非推奨である。
+
+\Note これらは{\TeX} Live 2019のリリース時を目途にして
+\strong{廃止予定}である。
 
 \begin{itemize}
 \item |kozuka4|\Means
@@ -152,6 +181,7 @@ v0.2a版以前で用意されていたメイン設定。
 \item |moga-mobo|\Means |moga| の別名。※\Pkg{pxchfon}互換用。
 \end{itemize}
 
+%-------------------
 \subsection{サブ設定}
 
 \Pkg{fontspec}では使用するフォントを |\newfontfamily| 命令で
@@ -202,7 +232,8 @@ Moboフォント（90／2000JIS字形）を使う設定。
 と太字（|\bfseries|）の2つに制限している。
 多くのOSでの扱いに合わせているようである。
 
-\subsection{他オプション}
+%-------------------
+\subsection{その他のオプション}
 
 \begin{itemize}
 \item |oneweight|\Means
@@ -228,10 +259,18 @@ Moboフォント（90／2000JIS字形）を使う設定。
 \Pkg{zxjatype}パッケージで指定されている場合はその値、
 なければ1となる。
 
+\item |90jis|\Means
+90JIS字形（2000JIS字形）の使用を指定する。
+
+\item |jis2004|\Means
+2004JIS字形の使用を指定する。
+
 \item |feature={|\Meta{属性リスト}|}|\Means
 このパッケージで指定されるフォント全体に通用する
 \Pkg{fontspec}の属性の指定。
 
 \end{itemize}
 
+%===========================================================
 \end{document}
+%% EOF

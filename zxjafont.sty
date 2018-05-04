@@ -33,9 +33,10 @@
 %% \zxjf@main@preset
 \def\zxjf@all@main@preset{%
   ms,ipa,ipaex,%
-  ms-hg,ipa-hg,ipaex-hg,moga,moga-90,%
+  ms-hg,ipa-hg,ipaex-hg,moga,moga-90,ume,%
   kozuka-pro,kozuka-pr6,kozuka-pr6n,hiragino-pro,hiragino-pron,%
-  morisawa-pro,morisawa-pr6n,yu-win,yu-osx,%
+  morisawa-pro,morisawa-pr6n,yu-win,yu-win10,yu-osx,%
+  sourcehan,sourcehan-jp,noto,noto-jp,%
   kozuka4,kozuka6,kozuka6n,hiragino,%
   ms-dx,ipa-dx,hiragino-dx,moga-mobo}
 \def\zxjf@all@sub@preset{%
@@ -162,11 +163,17 @@
     \zxjf@setsansfont{#6,BoldFont=#4}{#3}%
     \zxjf@setmonofont{#6,BoldFont=#4}{#3}%
   \fi}
+\def\zxjf@declare@preset@with@prop#1#2{%
+  \zxjf@declare@preset{#1}{#2{RawFeature=-palt;-kern}}%
+  \zxjf@declare@preset{#1/prop}{#2{RawFeature=+palt;+Wkern}}}
 
 %% \zxjf@declare@preset@alias{<name1>}{<name2>}
 \def\zxjf@declare@preset@alias#1#2{%
   \expandafter\let\csname zxjf@the@preset@#1\expandafter\endcsname
     \csname zxjf@the@preset@#2\endcsname}
+\def\zxjf@declare@preset@alias@with@prop#1#2{%
+  \zxjf@declare@preset@alias{#1}{#2}%
+  \zxjf@declare@preset@alias{#1/prop}{#2/prop}}
 
 %% \zxjf@use@preset{<name>}
 \def\zxjf@use@preset#1{%
@@ -210,6 +217,9 @@
 \zxjf@declare@preset{moga-90}{%
   \zxjf@multiweight{MogaEx90Mincho}{MogaEx90Mincho Bold}%
     {MogaEx90Gothic}{MogaEx90Gothic Bold}{MogaEx90Gothic}}
+\zxjf@declare@preset{ume}{%
+  \zxjf@multiweight{Ume Mincho}{Ume Mincho}%
+    {Ume Gothic}{Ume Gothic O5}{Ume Gothic O5}}
 \zxjf@declare@preset{kozuka-pro}{%
   \zxjf@multiweight@opt{KozMinPro-Regular}{KozMinPro-Bold}%
     {KozGoPro-Regular}{KozGoPro-Bold}%
@@ -274,6 +284,10 @@
   \zxjf@multiweight@opt{YuMincho-Regular}{YuMincho-Demibold}%
     {YuGothic-Regular}{YuGothic-Bold}%
     {YuGothic-Regular}{RawFeature=+palt;+kern}}
+\zxjf@declare@preset@with@prop{yu-win10}{%
+  \zxjf@multiweight@opt{YuMincho-Regular}{YuMincho-Demibold}%
+    {YuGothic-Regular}{YuGothic-Bold}%
+    {YuGothic-Medium}}
 \zxjf@declare@preset{yu-osx}{%
   \zxjf@multiweight@opt{YuMincho-Medium}{YuMincho-Demibold}%
     {YuGothic-Medium}{YuGothic-Bold}%
@@ -282,6 +296,22 @@
   \zxjf@multiweight@opt{YuMincho-Medium}{YuMincho-Demibold}%
     {YuGothic-Medium}{YuGothic-Bold}%
     {YuGothic-Medium}{RawFeature=+palt;+kern}}
+\zxjf@declare@preset@with@prop{sourcehan}{%
+  \zxjf@multiweight@opt{SourceHanSerif-Regular}{SourceHanSerif-Bold}%
+    {SourceHanSans-Regular}{SourceHanSans-Bold}%
+    {SourceHanSans-Medium}}
+\zxjf@declare@preset@with@prop{sourcehan-jp}{%
+  \zxjf@multiweight@opt{SourceHanSerifJP-Regular}{SourceHanSerifJP-Bold}%
+    {SourceHanSansJP-Regular}{SourceHanSansJP-Bold}%
+    {SourceHanSansJP-Medium}}
+\zxjf@declare@preset@with@prop{noto}{%
+  \zxjf@multiweight@opt{NotoSerifCJKjp-Regular}{NotoSerifCJKjp-Bold}%
+    {NotoSansCJKjp-Regular}{NotoSansCJKjp-Bold}%
+    {NotoSansCJKjp-Medium}}
+\zxjf@declare@preset@with@prop{noto-jp}{%
+  \zxjf@multiweight@opt{NotoSerifJP-Regular}{NotoSerifJP-Bold}%
+    {NotoSansJP-Regular}{NotoSansJP-Bold}%
+    {NotoSansJP-Medium}}
 %(obsolete)
 \zxjf@declare@preset{kozuka4}{%
   \zxjf@uniweight@opt{Kozuka Mincho Pro}{Kozuka Gothic Pro}%
@@ -308,13 +338,16 @@
   \zxjf@uniweight@opt{Hiragino Mincho Pro W3}{Hiragino Kaku Gothic Pro W6}%
     {RawFeature=+palt;+kern}}
 %(alias)
+\zxjf@declare@preset@alias@with@prop{kozuka}{kozuka-pro}
+\zxjf@declare@preset@alias@with@prop{morisawa}{morisawa-pro}
+\zxjf@declare@preset@alias{moga-mobo}{moga}
+%(alias-obsolete)
 \zxjf@declare@preset@alias{ms-dx}{ms-hg}
 \zxjf@declare@preset@alias{ms-dx/prop}{ms-hg/prop}
 \zxjf@declare@preset@alias{ipa-dx}{ipa-hg}
 \zxjf@declare@preset@alias{ipa-dx/prop}{ipa-hg/prop}
 \zxjf@declare@preset@alias{hiragino-dx}{hiragino-pro}
 \zxjf@declare@preset@alias{hiragino-dx/prop}{hiragino-pro/prop}
-\zxjf@declare@preset@alias{moga-mobo}{moga}
 
 \zxjf@declare@preset{hg}{%
   \zxjf@newfamily{hgmc}{BoldFont=HGSMinchoE}{HGSMinchoB}%

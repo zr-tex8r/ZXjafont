@@ -15,11 +15,7 @@
 
 %% preparation
 \RequirePackage{ifxetex}\RequireXeTeX
-\def\zxjf@error{\PackageError\zxjf@pkgname}
-\def\zxjf@warn{\PackageInfo\zxjf@pkgname}
-\ifx\bxUseDebug\relax \let\zxjf@debug\@gobble
-\else \def\zxjf@debug#1{\typeout{\zxjf@pkgname: #1}}
-\fi
+\providecommand{\bxDebug}[1]{}
 
 %--------------------------------------- general
 
@@ -36,12 +32,19 @@
 %--------------------------------------- handle options
 
 %% constants
-\chatdef\zxjf@cjkshape@@none=0
-\chatdef\zxjf@cjkshape@@xc=1    % 90jis
-\chatdef\zxjf@cjkshape@@mmiv=2  % jis2004
+\chardef\zxjf@cjkshape@@none=0
+\chardef\zxjf@cjkshape@@xc=1    % 90jis
+\chardef\zxjf@cjkshape@@mmiv=2  % jis2004
 
 %% variables
+\let\zxjf@main@preset\relax
+\let\zxjf@sub@preset\@empty
+\newif\ifzxjf@prop
+\newif\ifzxjf@oneweight
 \let\zxjf@cjkshape\zxjf@cjkshape@@none
+\let\zxjf@scale\relax
+\let\zxjf@feat\@empty
+\newif\ifzxjf@zxjatype
 
 %% \zxjf@main@preset
 \def\zxjf@all@main@preset{%
@@ -52,56 +55,63 @@
   sourcehan,sourcehan-jp,noto,noto-jp,%
   kozuka4,kozuka6,kozuka6n,hiragino,%
   ms-dx,ipa-dx,hiragino-dx,moga-mobo}
+
+%% \zxjf@main@sub@preset
 \def\zxjf@all@sub@preset{%
   hg,hiraginomg-pro,hiraginomg-pron,mobo,mobo-90,maruberi,%
   hiraginomg}
-\let\zxjf@main@preset\relax
+
+% preset options
 \def\zxjf@do#1{\DeclareOption{#1}{\def\zxjf@main@preset{#1}}}
 \@for\zxjf@x:=\zxjf@all@main@preset\do{%
   \expandafter\zxjf@do\expandafter{\zxjf@x}}
-\let\zxjf@sub@preset\@empty
 \def\zxjf@do#1{\DeclareOption{#1}{\zxjf@add@sub@preset{#1}}}
 \@for\zxjf@x:=\zxjf@all@sub@preset\do{%
   \expandafter\zxjf@do\expandafter{\zxjf@x}}
 \def\zxjf@add@sub@preset#1{%
   \edef\zxjf@sub@preset{\zxjf@sub@preset#1,}}
-% 
-\newif\ifzxjf@prop
+% 'prop'
 \DeclareOption{prop}{\zxjf@proptrue}
-\newif\ifzxjf@oneweight
+% 'oneweight'
 \DeclareOption{oneweight}{\zxjf@oneweighttrue}
 % '90jis'/'jis2004'
 \DeclareOption{90jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@xc}
 \DeclareOption{jis2004}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
 
-% options using keyval
-\let\zxjf@scale\relax
-\define@key{zxjf}{scale}{\def\zxjf@scale{#1}}
-\let\zxjf@feat\@empty
-\define@key{zxjf}{feature}{\def\zxjf@feat{#1}}
+%% options using keyval
 \DeclareOption*{\def\zxjf@nxt{\setkeys{zxjf}}%
   \expandafter\zxjf@nxt\expandafter{\CurrentOption}}
-% dispatch
+% 'scale=<real>'
+\define@key{zxjf}{scale}{\def\zxjf@scale{#1}}
+% 'feature=<text>'
+\define@key{zxjf}{feature}{\def\zxjf@feat{#1}}
+
+%% dispatch
 \let\@org@use@ption\@use@ption
 \def\@use@ption{\csname ds@\CurrentOption \endcsname}
 \ProcessOptions*
 \let\@use@ption\@org@use@ption
-% preset must be given
+
+%% preset must be given
 \ifx\zxjf@main@preset\relax
-  \zxjf@error{Preset name not specified}
-  {You must give one of the following names as option.\MessageBreak
-   \space\space\zxjf@all@main@preset}
-  \endinput\fi
+  \PackageError\zxjf@pkgname
+   {Preset name not specified}
+   {You must give one of the following names as option.\MessageBreak
+    \space\space\zxjf@all@main@preset}
+\expandafter\endinput\fi\relax
 
 %% detect bxjatype
-\newif\ifzxjf@zxjatype
 \@ifpackageloaded{zxjatype}{\zxjf@zxjatypetrue}{}
 \AtBeginDocument{%
-  \ifzxjf@zxjatype\else\@ifpackageloaded{zxjatype}{%
-      \zxjf@error{zxjatype must be loaded before me}\@ehc
-  }\fi}
+  \unless\ifzxjf@zxjatype
+    \@ifpackageloaded{zxjatype}{%
+      \PackageError\zxjf@pkgname
+       {zxjatype must be loaded before me}\@ehc
+    }{}%
+  \fi}
 \ifzxjf@zxjatype\ifzxjf@prop
-  \zxjf@error{Option 'prop' cannot be used with zxjatype}\@ehc
+  \PackageError\zxjf@pkgname
+   {Option 'prop' cannot be used with zxjatype}\@ehc
   \zxjf@propfalse
 \fi\fi
 
@@ -113,8 +123,7 @@
     \ifdefined\JaFontScale \let\zxjf@scale\JaFontScale
     \else\ifdefined\zxjt@scale \let\zxjf@scale\zxjt@scale
     \else\ifcsname __zxjt_scale_tl\endcsname
-      \expandafter\let\expandafter\zxjf@scale
-       \csname __zxjt_scale_tl\endcsname
+      \letcs\zxjf@scale{__zxjt_scale_tl}
     \fi\fi\fi
   \fi
   \ifx\zxjf@scale\relax % still unknown
@@ -136,9 +145,10 @@
   \fi
   \zxjf@feat}
 
+%% \zxjf@xfeat
+% All fontspec options including scale.
 \edef\zxjf@xfeat{Scale=\zxjf@scale,\zxjf@feat}
-
-\zxjf@debug{scale=\zxjf@scale/feat={\zxjf@feat}/%
+\bxDebug{zxjafont>>scale=\zxjf@scale/feat={\zxjf@feat}/%
   preset=\zxjf@main@preset/\zxjf@sub@preset}
 
 %--------------------------------------- font setup helpers
@@ -149,8 +159,8 @@
 \def\zxjf@setsansfont#1{\setjasansfont[\zxjf@xfeat,#1]}
 \def\zxjf@setmonofont#1{\setjamonofont[\zxjf@xfeat,#1]}
 \def\zxjf@newfamily#1#2#3{%
-  \expandafter\def\csname #1family\expandafter\endcsname\expandafter
-   {\csname a#1family\endcsname\CJKfamily{#1}}%
+  \csedef{#1family}{%
+    \expandonce{\csname a#1family\endcsname}\noexpand\CJKfamily{#1}}%
   \expandafter\newfontfamily\csname a#1family\endcsname[\zxjf@feat,#2]{#3}%
   \setjafamilyfont{#1}[\zxjf@xfeat,#2]{#3}}
 \else
@@ -167,6 +177,7 @@
 \def\zxjf@declare@preset#1{%
   \expandafter\zxjf@decl@preset@a\csname zxjf@the@preset@#1\endcsname}
 \def\zxjf@decl@preset@a#1{\@onlypreamble#1\def#1}
+\zxjf@declare@preset{}{}
 \@onlypreamble\zxjf@uniweight
 \def\zxjf@uniweight#1#2{%
   \zxjf@uniweight@opt{#1}{#2}{}}
@@ -189,27 +200,25 @@
     \zxjf@setsansfont{#6,BoldFont=#4}{#3}%
     \zxjf@setmonofont{#6,BoldFont=#4}{#3}%
   \fi}
+%% \zxjf@declare@preset@with@prop{<name>}{<text>}
 \def\zxjf@declare@preset@with@prop#1#2{%
   \zxjf@declare@preset{#1}{#2{RawFeature=-palt;-kern}}%
   \zxjf@declare@preset{#1/prop}{#2{RawFeature=+palt;+Wkern}}}
 
 %% \zxjf@declare@preset@alias{<name1>}{<name2>}
 \def\zxjf@declare@preset@alias#1#2{%
-  \expandafter\let\csname zxjf@the@preset@#1\expandafter\endcsname
-    \csname zxjf@the@preset@#2\endcsname}
+  \csletcs{zxjf@the@preset@#1}{zxjf@the@preset@#2}}
+%% \zxjf@declare@preset@alias@with@prop{<name1>}{<name2>}
 \def\zxjf@declare@preset@alias@with@prop#1#2{%
   \zxjf@declare@preset@alias{#1}{#2}%
   \zxjf@declare@preset@alias{#1/prop}{#2/prop}}
 
 %% \zxjf@use@preset{<name>}
 \def\zxjf@use@preset#1{%
-  \ifzxjf@prop \zxjf@use@preset@a{#1/prop}%
-  \else \let\zxjf@nxt\relax \fi
-  \ifx\zxjf@nxt\relax \zxjf@use@preset@a{#1}\fi
+  \undef\zxjf@nxt
+  \ifzxjf@prop \letcs\zxjf@nxt{zxjf@the@preset@#1/prop}\fi
+  \unless\ifdefined\zxjf@nxt \letcs\zxjf@nxt{zxjf@the@preset@#1}\fi
   \zxjf@nxt}
-\def\zxjf@use@preset@a#1{%
-  \expandafter\let\expandafter\zxjf@nxt
-   \csname zxjf@the@preset@#1\endcsname}
 
 %% definitions of main preset mappings
 \zxjf@declare@preset{ms}{%
@@ -375,6 +384,7 @@
 \zxjf@declare@preset@alias{hiragino-dx}{hiragino-pro}
 \zxjf@declare@preset@alias{hiragino-dx/prop}{hiragino-pro/prop}
 
+%% definitions of sub preset mappings
 \zxjf@declare@preset{hg}{%
   \zxjf@newfamily{hgmc}{BoldFont=HGSMinchoE}{HGSMinchoB}%
   \zxjf@newfamily{hgpr}{}{HGSSoeiPresenceEB}%
@@ -431,7 +441,8 @@
 
 %--------------------------------------- and some extras
 
-\def\useeasyjapanesesettings{%
+%%<*> \useeasyjapanesesettings
+\newcommand*\useeasyjapanesesettings{%
 \XeTeXlinebreaklocale "ja"\relax
 \XeTeXlinebreakskip=0pt plus 1pt minus 0.1pt\relax
 \XeTeXlinebreakpenalty=0\relax

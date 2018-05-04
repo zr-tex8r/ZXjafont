@@ -389,6 +389,16 @@
 \zxjf@declare@preset{maruberi}{%
   \zxjf@newfamily{mmg}{}{MotoyaLMaru}}
 
+%% warn for deprecated presets
+\@for\zxjf@x:={%
+  kozuka4,kozuka6,kozuka6n,hiragino,ms-dx,ipa-dx,hiragino-dx%
+}\do{%
+  \ifx\zxjf@x\zxjf@main@preset
+    \PackageWarningNoLine\zxjf@pkgname
+     {Old preset '\zxjf@x' is deprecated\MessageBreak
+      (see the manual for detail)}%
+  \fi}
+
 %% ... and invokes the specified one!
 \zxjf@use@preset{\zxjf@main@preset}
 \@for\zxjf@x:=\zxjf@sub@preset\do{\zxjf@use@preset\zxjf@x}

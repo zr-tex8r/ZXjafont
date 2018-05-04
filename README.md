@@ -30,11 +30,15 @@ This package is distributed under the MIT License.
 Revision History
 ----------------
 
-  * Version 0.3  [2015/05/08]
+  * Version 0.4  〈2018/05/04〉
+      - New preets: `yu-win10`, `sourcehan(-jp)`, `noto(-jp)`, `ume`.
+      - New options: `90jis`, `jis2004`.
+      - The use of deprecated presets is warned.
+  * Version 0.3  〈2015/05/08〉
       - Presets made more alike those of pxchfon.
-  * Version 0.2a [2013/01/28]
+  * Version 0.2a 〈2013/01/28〉
       - Adjustment for new zxjatype.
-  * Version 0.2  [2009/12/22]
+  * Version 0.2  〈2009/12/22〉
       - First public version.
 
 --------------------

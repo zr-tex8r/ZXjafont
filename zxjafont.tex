@@ -1,6 +1,7 @@
 % 文字コードは UTF-8
 % xelatex で組版する
-\documentclass[xelatex,ja=standard,a4paper]{bxjsarticle}
+\documentclass[xelatex,ja=standard,jafont=ipaex,
+  a4paper]{bxjsarticle}
 \xeCJKDeclareCharClass{CJK}{`■,`※}
 \usepackage{color}
 \definecolor{myblue}{rgb}{0,0,0.75}
@@ -11,8 +12,8 @@
 \bxtexlogoimport{*}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
-\newcommand{\PkgVersion}{0.3}
-\newcommand{\PkgDate}{0.3}
+\newcommand{\PkgVersion}{0.4}
+\newcommand{\PkgDate}{2018/05/04}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}

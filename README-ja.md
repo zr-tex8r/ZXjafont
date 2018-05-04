@@ -11,40 +11,40 @@ XeLaTeX + fontspec でのフォントファミリ名を直接指定する方式�
 
 ### 前提環境
 
-  - TeX 処理系： XeLaTeX
-  - 前提パッケージ： fontspec
-
-### 本ソフトウェアの作者のサイト
-
-  - En toi Pythmeni tes TeXnopoleos ～電脳世界の奥底にて～  
-    <http://zrbabbler.sp.land.to/>
-
-  - 以下のページに一部機能の使用例を紹介した。  
-    「ZXjafont パッケージ」
-    <http://zrbabbler.sp.land.to/zxjafont.html>
+  * フォーマット： LaTeX
+  * エンジン： XeTeX
+  * 依存パッケージ：
+      - fontspec
 
 ### インストール
 
 TDS 1.1 に従ったシステムでは、各ファイルを次の場所に移動する。
 
-  - `*.sty`   → $TEXMF/tex/xelatex/zxjafont/
-
-W32TeX を C:\usr\local にインストールした場合は次のようになる。
-
-  - `*.sty`   → C:\usr\local\share\texmf-local\tex\xelatex\zxjafont
+  - `*.sty`   → $TEXMF/tex/xelatex/zxjafont
 
 ### ライセンス
 
-MIT ライセンス
+本パッケージは MIT ライセンスの下で配布される。
+
+
+zxjafont パッケージ ー 本体
+---------------------------
+
+詳細についてはマニュアル `zxjafont.pdf` を参照されたい。
+
 
 更新履歴
 --------
 
-  * Version 0.3  [2015/05/08]
+  * Version 0.4  〈2018/05/04〉
+      - プリセット追加：`yu-win10`、`sourcehan(-jp)`、`noto(-jp)`、`ume`。
+      - オプション追加：`90jis`、`jis2004`。
+      - 非推奨のプリセットの使用を警告する。
+  * Version 0.3  〈2015/05/08〉
       - プリセット設定を pxchfon のものに合わせた。
-  * Version 0.2a [2013/01/28]
+  * Version 0.2a 〈2013/01/28〉
       - 新版の zxjatype への対応。
-  * Version 0.2  [2009/12/22]
+  * Version 0.2  〈2009/12/22〉
       - 最初の公開版。
 
 --------------------

@@ -12,8 +12,8 @@
 \bxtexlogoimport{*}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
-\newcommand{\PkgVersion}{0.4}
-\newcommand{\PkgDate}{2018/05/04}
+\newcommand{\PkgVersion}{0.5}
+\newcommand{\PkgDate}{2019/06/29}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
@@ -28,7 +28,7 @@
 %===========================================================
 \section{概要}
 
-{\XeLaTeX} + fontspec でのフォントファミリ名を直接指定する方式は
+{\XeLaTeX}＋\Pkg{fontspec}でのフォントファミリ名を直接指定する方式は
 「好きなフォントを指定する」という点では、
 {\pLaTeX}\>よりも格段に使い易いが、
 日本語を扱うためには必ず何らかの設定を行う必要があり、
@@ -37,12 +37,11 @@
 一般的に行われている設定を予め用意しておいて、
 簡単に呼び出せるようにしている。
 
-\paragraph{前提フォーマット}
-{\XeLaTeX}。
-
-\paragraph{依存パッケージ}
+\paragraph{前提環境}\mbox{}
 \begin{itemize}
-\item \Pkg{fontspec}パッケージ
+\item フォーマット\Means {\LaTeX}
+\item エンジン\Means {\XeTeX}
+\item 依存パッケージ\Means \Pkg{fontspec}パッケージ
 \end{itemize}
 
 %===========================================================
@@ -115,12 +114,14 @@ IPAexフォント。
 \item |moga-90|\Means
   Mogaフォント（90／2000JIS字形）。
   \Note MogaEx90系統が用いられる。
+\item |ume|\Means
+  梅フォント。
 \item |kozuka-pro|\Means
   小塚フォント（Pro版）。
 \item |kozuka-pr6|\Means
   小塚フォント（Pr6版）。
 \item |kozuka-pr6n|\Means
-  小塚フォント（Pr6n版）。
+  小塚フォント（Pr6N版）。
 \item |hiragino-pro|\Means
   ヒラギノフォント基本6書体セット（Pro/Std版）。
 \item |hiragino-pron|\Means
@@ -134,53 +135,56 @@ IPAexフォント。
 \item |yu-win10|\Means
   游書体（Windows~10搭載版）。%TODO
 \item |yu-osx|\Means
-  游書体（Mac OS X搭載版）。
+  游書体（macOS搭載版）。
 \item |sourcehan|\Means
   Source Han Serif（源ノ明朝）+ Source Han Sans（源ノ角ゴシック）、
   非サブセット版%TODO
   \footnote{つまり、地域別サブセットOTF版以外のもの。
     後掲の |noto| も同じ。}。
+\item |sourcehan-jp|\Means
+  Source Han Serif + Source Han Sans、
+  日本用地域別サブセット版。
 \item |noto|\Means
   Noto Serif CJK + Noto Sans CJK、
   非サブセット版。
+\item |noto-jp|\Means
+  Noto Serif JP + Noto Sans JP、
+  日本用地域別サブセット版。
 \end{itemize}
 
-\paragraph{ptex-fontmaps互換のオプション}
-
-\Pkg{ptex-fontmaps}のプリセット名を別名として用意した。
+\paragraph{他パッケージとの互換用のオプション}
+\mbox{}
+%\Pkg{ptex-fontmaps}のプリセット名を別名として用意した。
 
 \begin{itemize}
 \item |kozuka|\Means
-  |kozuka-pro| の別名。%TODO
+  |kozuka-pro| の別名。
+  （\Pkg{ptex-fontmaps}でのプリセット名。）
 \item |morisawa|\Means
-  |morisawa-pro| の別名。%TODO
+  |morisawa-pro| の別名。
+  （\Pkg{ptex-fontmaps}でのプリセット名。）
+\item |moga-mobo-ex|\Means
+  |moga| の別名。
+  （\Pkg{ptex-fontmaps}でのプリセット名。）
+\item |noto-otf|\Means
+  |noto| の別名。
+  （\Pkg{luatexja-preset}でのプリセット名。）
 \end{itemize}
 
 \Note なお、|hiragino-pro| と同義の\Pkg{ptex-fontmaps}の
 プリセット名は |hiragino| であるが、本パッケージの |hiragino| は
-旧版の非推奨の設定であり |hiragino-pro| とは異なる。
+旧版で用いられていた設定であり |hiragino-pro| とは異なる。
 
-\paragraph{旧版の設定}
+\paragraph{廃止されたプリセット設定}
 
-v0.2a版以前で用意されていたメイン設定で、現在では非推奨である。
+0.2a版以前で用意されていた次のプリセット設定は、
+0.5版において廃止された。
+現在は指定するとエラーが発生する。
 
-\Note これらは{\TeX} Live 2019のリリース時を目途にして
-\strong{廃止予定}である。
-
-\begin{itemize}
-\item |kozuka4|\Means
-  小塚フォント（Pro版）の単ウェイト使用。
-\item |kozuka6|\Means
-  小塚フォント（Pr6版）の単ウェイト使用。
-\item |kozuka6n|\Means
-  小塚フォント（Pr6n版）の単ウェイト使用。
-\item |hiragino|\Means
-  ヒラギノフォント（Pro版）の単ウェイト使用。
-\item |ms-dx|\Means |ms-hg| の別名。
-\item |ipa-dx|\Means |ipa-hg| の別名。
-\item |hiragino-dx|\Means |hiragino-pro| の別名。
-\item |moga-mobo|\Means |moga| の別名。※\Pkg{pxchfon}互換用。
-\end{itemize}
+\begin{quote}
+|kozuka4|、|kozuka6|、|kozuka6n|、|hiragino|、
+|ms-dx|、|ipa-dx|、|hiragino-dx|
+\end{quote}
 
 %-------------------
 \subsection{サブ設定}
@@ -242,6 +246,8 @@ Moboフォント（90／2000JIS字形）を使う設定。
 \Note \Pkg{pxchfon}の説明書において |\setminchofont|
 と |\setgothicfont| で設定されているウェイトのフォント
 が用いられる。
+\item |nooneweight|\Means
+|oneweight|の否定。
 
 \item |prop|\Means
 プロポーショナル幅のフォントを用いる。
@@ -253,6 +259,8 @@ Moboフォント（90／2000JIS字形）を使う設定。
 \Note \Pkg{zxjatype}を用いる場合は、
 和文は等幅フォントを用いることが前提なので、
 このオプションは指定できない（エラーになる）。
+\item |noprop|\Means
+|prop|の否定。
 
 \item |scale=|\Meta{実数}\Means
 スケール値（\Pkg{fontspec}の |Scale| 属性の値）。
@@ -260,10 +268,10 @@ Moboフォント（90／2000JIS字形）を使う設定。
 \Pkg{zxjatype}パッケージで指定されている場合はその値、
 なければ1となる。
 
-\item |90jis|\Means
+\item |jis90|／|90jis|\Means
 90JIS字形（2000JIS字形）の使用を指定する。
 
-\item |jis2004|\Means
+\item |jis2004|／|2004jis|\Means
 2004JIS字形の使用を指定する。
 
 \item |feature={|\Meta{属性リスト}|}|\Means

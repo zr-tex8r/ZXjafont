@@ -30,6 +30,9 @@ This package is distributed under the MIT License.
 Revision History
 ----------------
 
+  * Version 0.5  〈2019/06/29〉
+      - More aliases are provided.
+      - The deprecated presets are abolished.
   * Version 0.4  〈2018/05/04〉
       - New preets: `yu-win10`, `sourcehan(-jp)`, `noto(-jp)`, `ume`.
       - New options: `90jis`, `jis2004`.

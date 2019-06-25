@@ -53,8 +53,7 @@
   kozuka-pro,kozuka-pr6,kozuka-pr6n,hiragino-pro,hiragino-pron,%
   morisawa-pro,morisawa-pr6n,yu-win,yu-win10,yu-osx,%
   sourcehan,sourcehan-jp,noto,noto-jp,%
-  kozuka4,kozuka6,kozuka6n,hiragino,%
-  ms-dx,ipa-dx,hiragino-dx,moga-mobo}
+  moga-mobo,moga-mobo-ex}
 
 %% \zxjf@main@sub@preset
 \def\zxjf@all@sub@preset{%
@@ -77,6 +76,15 @@
 % '90jis'/'jis2004'
 \DeclareOption{90jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@xc}
 \DeclareOption{jis2004}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
+
+% abolished presets
+\@onlypreamble\zxjf@err@abpre
+\def\zxjf@err@abpre#1{%
+  \PackageError\zxjf@pkgname
+   {The old preset '#1' is *abolished*}{\@ehc}}
+\@for\zxjf@x:={%
+  kozuka4,kozuka6,kozuka6n,hiragino,ms-dx,ipa-dx,hiragino-dx%
+}\do{\DeclareOption{\zxjf@x}{\zxjf@err@abpre{\CurrentOption}}}
 
 %% options using keyval
 \DeclareOption*{\def\zxjf@nxt{\setkeys{zxjf}}%
@@ -347,42 +355,10 @@
   \zxjf@multiweight@opt{NotoSerifJP-Regular}{NotoSerifJP-Bold}%
     {NotoSansJP-Regular}{NotoSansJP-Bold}%
     {NotoSansJP-Medium}}
-%(obsolete)
-\zxjf@declare@preset{kozuka4}{%
-  \zxjf@uniweight@opt{Kozuka Mincho Pro}{Kozuka Gothic Pro}%
-    {RawFeature=-palt;-kern}}
-\zxjf@declare@preset{kozuka4/prop}{%
-  \zxjf@uniweight@opt{Kozuka Mincho Pro}{Kozuka Gothic Pro}%
-    {RawFeature=+palt;+kern}}
-\zxjf@declare@preset{kozuka6}{%
-  \zxjf@uniweight@opt{Kozuka Mincho Pro-VI}{Kozuka Gothic Pro-VI}%
-    {RawFeature=-palt;-kern}}
-\zxjf@declare@preset{kozuka6/prop}{%
-  \zxjf@uniweight@opt{Kozuka Mincho Pro-VI}{Kozuka Gothic Pro-VI}%
-    {RawFeature=+palt;+kern}}
-\zxjf@declare@preset{kozuka6n}{%
-  \zxjf@uniweight@opt{Kozuka Mincho Pr6N}{Kozuka Gothic Pr6N}%
-    {RawFeature=-palt;-kern}}
-\zxjf@declare@preset{kozuka6n/prop}{%
-  \zxjf@uniweight@opt{Kozuka Mincho Pr6N}{Kozuka Gothic Pr6N}%
-    {RawFeature=+palt;+kern}}
-\zxjf@declare@preset{hiragino}{%
-  \zxjf@uniweight@opt{Hiragino Mincho Pro W3}{Hiragino Kaku Gothic Pro W6}%
-    {RawFeature=-palt;-kern}}
-\zxjf@declare@preset{hiragino/prop}{%
-  \zxjf@uniweight@opt{Hiragino Mincho Pro W3}{Hiragino Kaku Gothic Pro W6}%
-    {RawFeature=+palt;+kern}}
 %(alias)
 \zxjf@declare@preset@alias@with@prop{kozuka}{kozuka-pro}
 \zxjf@declare@preset@alias@with@prop{morisawa}{morisawa-pro}
 \zxjf@declare@preset@alias{moga-mobo}{moga}
-%(alias-obsolete)
-\zxjf@declare@preset@alias{ms-dx}{ms-hg}
-\zxjf@declare@preset@alias{ms-dx/prop}{ms-hg/prop}
-\zxjf@declare@preset@alias{ipa-dx}{ipa-hg}
-\zxjf@declare@preset@alias{ipa-dx/prop}{ipa-hg/prop}
-\zxjf@declare@preset@alias{hiragino-dx}{hiragino-pro}
-\zxjf@declare@preset@alias{hiragino-dx/prop}{hiragino-pro/prop}
 
 %% definitions of sub preset mappings
 \zxjf@declare@preset{hg}{%
@@ -424,16 +400,6 @@
   \zxjf@newfamily{mobo}{Bold=MoboEx90Gothic Bold}{MoboEx90Gothic}}
 \zxjf@declare@preset{maruberi}{%
   \zxjf@newfamily{mmg}{}{MotoyaLMaru}}
-
-%% warn for deprecated presets
-\@for\zxjf@x:={%
-  kozuka4,kozuka6,kozuka6n,hiragino,ms-dx,ipa-dx,hiragino-dx%
-}\do{%
-  \ifx\zxjf@x\zxjf@main@preset
-    \PackageWarningNoLine\zxjf@pkgname
-     {Old preset '\zxjf@x' is deprecated\MessageBreak
-      (see the manual for detail)}%
-  \fi}
 
 %% ... and invokes the specified one!
 \zxjf@use@preset{\zxjf@main@preset}

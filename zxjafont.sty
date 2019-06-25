@@ -48,12 +48,15 @@
 
 %% \zxjf@main@preset
 \def\zxjf@all@main@preset{%
+  %(uniweight)
   ms,ipa,ipaex,%
+  %(multiweight)
   ms-hg,ipa-hg,ipaex-hg,moga,moga-90,ume,%
   kozuka-pro,kozuka-pr6,kozuka-pr6n,hiragino-pro,hiragino-pron,%
   morisawa-pro,morisawa-pr6n,yu-win,yu-win10,yu-osx,%
   sourcehan,sourcehan-jp,noto,noto-jp,%
-  moga-mobo,moga-mobo-ex}
+  %(alias)
+  kozuka,morisawa,moga-mobo-ex,noto-otf}
 
 %% \zxjf@main@sub@preset
 \def\zxjf@all@sub@preset{%
@@ -71,11 +74,15 @@
   \edef\zxjf@sub@preset{\zxjf@sub@preset#1,}}
 % 'prop'
 \DeclareOption{prop}{\zxjf@proptrue}
+\DeclareOption{noprop}{\zxjf@propfalse}
 % 'oneweight'
 \DeclareOption{oneweight}{\zxjf@oneweighttrue}
+\DeclareOption{nooneweight}{\zxjf@oneweightfalse}
 % '90jis'/'jis2004'
+\DeclareOption{jis90}{\let\zxjf@cjkshape\zxjf@cjkshape@@xc}
 \DeclareOption{90jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@xc}
 \DeclareOption{jis2004}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
+\DeclareOption{2004jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
 
 % abolished presets
 \@onlypreamble\zxjf@err@abpre
@@ -358,7 +365,8 @@
 %(alias)
 \zxjf@declare@preset@alias@with@prop{kozuka}{kozuka-pro}
 \zxjf@declare@preset@alias@with@prop{morisawa}{morisawa-pro}
-\zxjf@declare@preset@alias{moga-mobo}{moga}
+\zxjf@declare@preset@alias{moga-mobo-ex}{moga}
+\zxjf@declare@preset@alias{noto-otf}{noto}
 
 %% definitions of sub preset mappings
 \zxjf@declare@preset{hg}{%

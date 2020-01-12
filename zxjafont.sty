@@ -29,6 +29,21 @@
   \PackageError\zxjf@pkgname
    {Invalid value '#2' for option #1}\@ehc}
 
+%% \zxjf@cond\ifXXX...\fi{<true>}{<false>}
+\@gobbletwo\if\if \def\zxjf@cond#1\fi{%
+  #1\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi}
+
+%% \zxjf@with@cs\CS{<csname>}
+\def\zxjf@with@cs#1#2{%
+  \expandafter#1\csname#2\endcsname}
+
+%% \zxjf@onlypreamble@def\CS
+\def\zxjf@onlypreamble@def#1{%
+  \@onlypreamble#1\def#1}
+%% \zxjf@onlypreamble@let\CS
+\def\zxjf@onlypreamble@let#1{%
+  \@onlypreamble#1\let#1}
+
 %% \if\zxjf@isvalid{<csname>}...\fi
 \def\zxjf@isvalid#1{%
   \ifcsvoid{#1}{F}{T}T}
@@ -51,7 +66,7 @@
 \newif\ifzxjf@zxjatype
 
 %% \zxjf@all@main@preset
-\def\zxjf@all@main@preset{%
+\zxjf@onlypreamble@def\zxjf@all@main@preset{%
   %(uniweight)
   ms,ipa,ipaex,%
   %(multiweight)
@@ -63,7 +78,7 @@
   kozuka,morisawa,moga-mobo-ex,noto-otf,hiragino}
 
 %% \zxjf@all@sub@preset
-\def\zxjf@all@sub@preset{%
+\zxjf@onlypreamble@def\zxjf@all@sub@preset{%
   hg,hiraginomg-pro,hiraginomg-pron,mobo,mobo-90,maruberi,%
   hiraginomg}
 
@@ -71,11 +86,9 @@
 \def\zxjf@do#1{\DeclareOption{#1}{\def\zxjf@main@preset{#1}}}
 \@for\zxjf@x:=\zxjf@all@main@preset\do{%
   \expandafter\zxjf@do\expandafter{\zxjf@x}}
-\def\zxjf@do#1{\DeclareOption{#1}{\zxjf@add@sub@preset{#1}}}
+\def\zxjf@do#1{\DeclareOption{#1}{\appto\zxjf@sub@preset{#1,}}}
 \@for\zxjf@x:=\zxjf@all@sub@preset\do{%
   \expandafter\zxjf@do\expandafter{\zxjf@x}}
-\def\zxjf@add@sub@preset#1{%
-  \edef\zxjf@sub@preset{\zxjf@sub@preset#1,}}
 % 'prop'
 \DeclareOption{prop}{\zxjf@proptrue}
 \DeclareOption{noprop}{\zxjf@propfalse}
@@ -89,8 +102,7 @@
 \DeclareOption{2004jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
 
 % abolished presets
-\@onlypreamble\zxjf@err@abpre
-\def\zxjf@err@abpre#1{%
+\zxjf@onlypreamble@def\zxjf@err@abpre#1{%
   \PackageError\zxjf@pkgname
    {The old preset '#1' is *abolished*}{\@ehc}}
 \@for\zxjf@x:={%
@@ -106,10 +118,10 @@
 \define@key{zxjf}{feature}{\def\zxjf@feature{#1}}
 
 %% dispatch
-\let\@org@use@ption\@use@ption
-\def\@use@ption{\csname ds@\CurrentOption \endcsname}
+\zxjf@onlypreamble@let\zxjf@org@use@ption\@use@ption
+\def\@use@ption{\csname ds@\CurrentOption \endcsname}% FIXME
 \ProcessOptions*
-\let\@use@ption\@org@use@ption
+\let\@use@ption\zxjf@org@use@ption
 
 %% preset must be given
 \ifx\zxjf@main@preset\relax
@@ -156,18 +168,17 @@
   \fi
 \fi
 
-%% resolve CJKshape
-\edef\zxjf@feature{%
+%% \zxjf@whole@feature
+% All fontspec options including scale.
+\edef\zxjf@whole@feature{%
+  Scale=\zxjf@scale,%
+  % CJKShape
   \ifcase\zxjf@cjkshape % none
   \or CJKShape=JIS1990,% 90jis
   \or CJKShape=JIS2004,% jis2004
   \fi
   \zxjf@feature}
-
-%% \zxjf@whole@feature
-% All fontspec options including scale.
-\edef\zxjf@whole@feature{Scale=\zxjf@scale,\zxjf@feature}
-\bxDebug{zxjafont>>scale=\zxjf@scale/feat={\zxjf@feature}/%
+\bxDebug{zxjafont>>scale=\zxjf@scale/feat={\zxjf@whole@feature}/%
   preset=\zxjf@main@preset/\zxjf@sub@preset}
 
 %--------------------------------------- font setup helpers
@@ -180,36 +191,27 @@
 \def\zxjf@newfamily#1#2#3{%
   \csedef{#1family}{%
     \expandonce{\csname a#1family\endcsname}\noexpand\CJKfamily{#1}}%
-  \expandafter\newfontfamily\csname a#1family\endcsname[\zxjf@feature,#2]{#3}%
+  \zxjf@with@cs\newfontfamily{a#1family}[\zxjf@feature,#2]{#3}%
   \setjafamilyfont{#1}[\zxjf@whole@feature,#2]{#3}}
 \else
 \def\zxjf@setmainfont#1{\setmainfont[\zxjf@whole@feature,#1]}
 \def\zxjf@setsansfont#1{\setsansfont[\zxjf@whole@feature,#1]}
 \def\zxjf@setmonofont#1{\setmonofont[\zxjf@whole@feature,#1]}
 \def\zxjf@newfamily#1#2{%
-  \expandafter\newfontfamily\csname #1family\endcsname[\zxjf@whole@feature,#2]}
+  \zxjf@with@cs\newfontfamily{#1family}[\zxjf@whole@feature,#2]}
 \fi
 
 %--------------------------------------- preset japanese font mappings
 
 %% \zxjf@declare@preset{<name>}{<text>}, etc.
-\def\zxjf@declare@preset#1{%
-  \expandafter\zxjf@decl@preset@a\csname zxjf@the@preset@#1\endcsname}
-\def\zxjf@decl@preset@a#1{\@onlypreamble#1\def#1}
+\zxjf@onlypreamble@def\zxjf@declare@preset#1{%
+  \zxjf@with@cs\zxjf@onlypreamble@def{zxjf@the@preset@#1}}
 \zxjf@declare@preset{}{}
-\@onlypreamble\zxjf@uniweight
-\def\zxjf@uniweight#1#2{%
-  \zxjf@uniweight@opt{#1}{#2}{}}
-\@onlypreamble\zxjf@uniweight@opt
-\def\zxjf@uniweight@opt#1#2#3{%
+\zxjf@onlypreamble@def\zxjf@uniweight#1#2#3{%
   \zxjf@setmainfont{#3,BoldFont=#2}{#1}%
   \zxjf@setsansfont{#3}{#2}%
   \zxjf@setmonofont{#3}{#2}}
-\@onlypreamble\zxjf@multiweight
-\def\zxjf@multiweight#1#2#3#4#5{%
-  \zxjf@multiweight@opt{#1}{#2}{#3}{#4}{#5}{}}
-\@onlypreamble\zxjf@multiweight@opt
-\def\zxjf@multiweight@opt#1#2#3#4#5#6{%
+\zxjf@onlypreamble@def\zxjf@multiweight#1#2#3#4#5#6{%
   \ifzxjf@oneweight
     \zxjf@setmainfont{#6,BoldFont=#5}{#1}%
     \zxjf@setsansfont{#6}{#5}%
@@ -220,20 +222,21 @@
     \zxjf@setmonofont{#6,BoldFont=#4}{#3}%
   \fi}
 %% \zxjf@declare@preset@with@prop{<name>}{<text>}
-\def\zxjf@declare@preset@with@prop#1#2{%
+\zxjf@onlypreamble@def\zxjf@declare@preset@with@prop#1#2{%
   \zxjf@declare@preset{#1}{#2{RawFeature=-palt;-kern}}%
   \zxjf@declare@preset{#1/prop}{#2{RawFeature=+palt;+kern}}}
 
 %% \zxjf@declare@preset@alias{<name1>}{<name2>}
-\def\zxjf@declare@preset@alias#1#2{%
+\zxjf@onlypreamble@def\zxjf@declare@preset@alias#1#2{%
+  \zxjf@with@cs\@onlypreamble{zxjf@the@preset@#1}%
   \csletcs{zxjf@the@preset@#1}{zxjf@the@preset@#2}}
 %% \zxjf@declare@preset@alias@with@prop{<name1>}{<name2>}
-\def\zxjf@declare@preset@alias@with@prop#1#2{%
+\zxjf@onlypreamble@def\zxjf@declare@preset@alias@with@prop#1#2{%
   \zxjf@declare@preset@alias{#1}{#2}%
   \zxjf@declare@preset@alias{#1/prop}{#2/prop}}
 
 %% \zxjf@use@preset{<name>}
-\def\zxjf@use@preset#1{%
+\zxjf@onlypreamble@def\zxjf@use@preset#1{%
   \undef\zxjf@do
   \ifzxjf@prop \letcs\zxjf@do{zxjf@the@preset@#1/prop}\fi
   \unless\ifdefined\zxjf@do \letcs\zxjf@do{zxjf@the@preset@#1}\fi
@@ -241,133 +244,97 @@
 
 %% definitions of main preset mappings
 \zxjf@declare@preset{ms}{%
-  \zxjf@uniweight{MS-Mincho}{MS-Gothic}}
+  \zxjf@uniweight{MS-Mincho}{MS-Gothic}{}}
 \zxjf@declare@preset{ms/prop}{%
-  \zxjf@uniweight{MS-PMincho}{MS-PGothic}}
+  \zxjf@uniweight{MS-PMincho}{MS-PGothic}{}}
 \zxjf@declare@preset{ms-hg}{%
   \zxjf@multiweight{MS-Mincho}{HGMinchoE}%
-    {HGGothicM}{HGGothicE}{MS-Gothic}}
+    {HGGothicM}{HGGothicE}{MS-Gothic}{}}
 \zxjf@declare@preset{ms-hg/prop}{%
   \zxjf@multiweight{MS-PMincho}{HGPMinchoE}%
-    {HGPGothicM}{HGGothicE}{MS-PGothic}}
+    {HGPGothicM}{HGGothicE}{MS-PGothic}{}}
 \zxjf@declare@preset{ipa}{%
-  \zxjf@uniweight{IPAMincho}{IPAGothic}}
+  \zxjf@uniweight{IPAMincho}{IPAGothic}{}}
 \zxjf@declare@preset{ipa/prop}{%
-  \zxjf@uniweight{IPAPMincho}{IPAPGothic}}
+  \zxjf@uniweight{IPAPMincho}{IPAPGothic}{}}
 \zxjf@declare@preset{ipa-hg}{%
   \zxjf@multiweight{IPAMincho}{HGMinchoE}%
-    {HGGothicM}{HGGothicE}{IPAGothic}}
+    {HGGothicM}{HGGothicE}{IPAGothic}{}}
 \zxjf@declare@preset{ipa-hg/prop}{%
   \zxjf@multiweight{IPAPMincho}{HGPMinchoE}%
-    {HGPGothicM}{HGGothicE}{IPAPGothic}}
+    {HGPGothicM}{HGGothicE}{IPAPGothic}{}}
 \zxjf@declare@preset{ipaex}{%
-  \zxjf@uniweight{ipaexm.ttf}{ipaexg.ttf}}
+  \zxjf@uniweight{ipaexm.ttf}{ipaexg.ttf}{}}
 \zxjf@declare@preset{ipaex-hg}{%
   \zxjf@multiweight{ipaexm.ttf}{HGSMinchoE}%
-    {HGSGothicM}{HGSGothicE}{ipaexg.ttf}}
+    {HGSGothicM}{HGSGothicE}{ipaexg.ttf}{}}
 \zxjf@declare@preset{moga}{%
   \zxjf@multiweight{MogaExMincho}{MogaExMincho Bold}%
-    {MogaExGothic}{MogaExGothic Bold}{MogaExGothic}}
+    {MogaExGothic}{MogaExGothic Bold}{MogaExGothic}{}}
 \zxjf@declare@preset{moga-90}{%
   \zxjf@multiweight{MogaEx90Mincho}{MogaEx90Mincho Bold}%
-    {MogaEx90Gothic}{MogaEx90Gothic Bold}{MogaEx90Gothic}}
+    {MogaEx90Gothic}{MogaEx90Gothic Bold}{MogaEx90Gothic}{}}
 \zxjf@declare@preset{ume}{%
   \zxjf@multiweight{Ume Mincho}{Ume Mincho}%
-    {Ume Gothic}{Ume Gothic O5}{Ume Gothic O5}}
-\zxjf@declare@preset{kozuka-pro}{%
-  \zxjf@multiweight@opt{KozMinPro-Regular}{KozMinPro-Bold}%
+    {Ume Gothic}{Ume Gothic O5}{Ume Gothic O5}{}}
+\zxjf@declare@preset@with@prop{kozuka-pro}{%
+  \zxjf@multiweight{KozMinPro-Regular}{KozMinPro-Bold}%
     {KozGoPro-Regular}{KozGoPro-Bold}%
-    {KozGoPro-Medium}{RawFeature=-palt;-kern}}
-\zxjf@declare@preset{kozuka-pro/prop}{%
-  \zxjf@multiweight@opt{KozMinPro-Regular}{KozMinPro-Bold}%
-    {KozGoPro-Regular}{KozGoPro-Bold}%
-    {KozGoPro-Medium}{RawFeature=+palt;+kern}}
-\zxjf@declare@preset{kozuka-pr6}{%
-  \zxjf@multiweight@opt{KozMinProVI-Regular}{KozMinProVI-Bold}%
+    {KozGoPro-Medium}}
+\zxjf@declare@preset@with@prop{kozuka-pr6}{%
+  \zxjf@multiweight{KozMinProVI-Regular}{KozMinProVI-Bold}%
     {KozGoProVI-Regular}{KozGoProVI-Bold}%
-    {KozGoProVI-Medium}{RawFeature=-palt;-kern}}
-\zxjf@declare@preset{kozuka-pr6/prop}{%
-  \zxjf@multiweight@opt{KozMinProVI-Regular}{KozMinProVI-Bold}%
-    {KozGoProVI-Regular}{KozGoProVI-Bold}%
-    {KozGoProVI-Medium}{RawFeature=+palt;+kern}}
-\zxjf@declare@preset{kozuka-pr6n}{%
-  \zxjf@multiweight@opt{KozMinPr6N-Regular}{KozMinPr6N-Bold}%
+    {KozGoProVI-Medium}}
+\zxjf@declare@preset@with@prop{kozuka-pr6n}{%
+  \zxjf@multiweight{KozMinPr6N-Regular}{KozMinPr6N-Bold}%
     {KozGoPr6N-Regular}{KozGoPr6N-Bold}%
-    {KozGoPr6N-Medium}{RawFeature=-palt;-kern}}
-\zxjf@declare@preset{kozuka-pr6n/prop}{%
-  \zxjf@multiweight@opt{KozMinPr6N-Regular}{KozMinPr6N-Bold}%
-    {KozGoPr6N-Regular}{KozGoPr6N-Bold}%
-    {KozGoPr6N-Medium}{RawFeature=+palt;+kern}}
-\zxjf@declare@preset{hiragino-pro}{%
-  \zxjf@multiweight@opt{Hiragino Mincho Pro W3}{Hiragino Mincho Pro W6}%
+    {KozGoPr6N-Medium}}
+\zxjf@declare@preset@with@prop{hiragino-pro}{%
+  \zxjf@multiweight{Hiragino Mincho Pro W3}{Hiragino Mincho Pro W6}%
     {Hiragino Kaku Gothic Pro W3}{Hiragino Kaku Gothic Pro W6}%
-    {Hiragino Kaku Gothic Pro W6}{RawFeature=-palt;-kern}}
-\zxjf@declare@preset{hiragino-pro/prop}{%
-  \zxjf@multiweight@opt{Hiragino Mincho Pro W3}{Hiragino Mincho Pro W6}%
-    {Hiragino Kaku Gothic Pro W3}{Hiragino Kaku Gothic Pro W6}%
-    {Hiragino Kaku Gothic Pro W6}{RawFeature=+palt;+kern}}
-\zxjf@declare@preset{hiragino-pron}{%
-  \zxjf@multiweight@opt{Hiragino Mincho ProN W3}{Hiragino Mincho ProN W6}%
+    {Hiragino Kaku Gothic Pro W6}}
+\zxjf@declare@preset@with@prop{hiragino-pron}{%
+  \zxjf@multiweight{Hiragino Mincho ProN W3}{Hiragino Mincho ProN W6}%
     {Hiragino Kaku Gothic ProN W3}{Hiragino Kaku Gothic ProN W6}%
-    {Hiragino Kaku Gothic ProN W6}{RawFeature=-palt;-kern}}
-\zxjf@declare@preset{hiragino-pron/prop}{%
-  \zxjf@multiweight@opt{Hiragino Mincho ProN W3}{Hiragino Mincho ProN W6}%
-    {Hiragino Kaku Gothic ProN W3}{Hiragino Kaku Gothic ProN W6}%
-    {Hiragino Kaku Gothic ProN W6}{RawFeature=+palt;+kern}}
-\zxjf@declare@preset{morisawa-pro}{%
-  \zxjf@multiweight@opt{A-OTF-RyuminPro-Light.otf}{A-OTF-FutoMinA101Pro-Bold.otf}%
+    {Hiragino Kaku Gothic ProN W6}}
+\zxjf@declare@preset@with@prop{morisawa-pro}{%
+  \zxjf@multiweight{A-OTF-RyuminPro-Light.otf}{A-OTF-FutoMinA101Pro-Bold.otf}%
     {A-OTF-GothicBBBPro-Medium.otf}{A-OTF-FutoGoB101Pro-Bold.otf}%
-    {A-OTF-GothicBBBPro-Medium.otf}{RawFeature=-palt;-kern}}
-\zxjf@declare@preset{morisawa-pro/prop}{%
-  \zxjf@multiweight@opt{A-OTF-RyuminPro-Light.otf}{A-OTF-FutoMinA101Pro-Bold.otf}%
-    {A-OTF-GothicBBBPro-Medium.otf}{A-OTF-FutoGoB101Pro-Bold.otf}%
-    {A-OTF-GothicBBBPro-Medium.otf}{RawFeature=+palt;+kern}}
-\zxjf@declare@preset{morisawa-pr6n}{%
-  \zxjf@multiweight@opt{A-OTF-RyuminPr6N-Light.otf}{A-OTF-FutoMinA101Pr6N-Bold.otf}%
+    {A-OTF-GothicBBBPro-Medium.otf}}
+\zxjf@declare@preset@with@prop{morisawa-pr6n}{%
+  \zxjf@multiweight{A-OTF-RyuminPr6N-Light.otf}{A-OTF-FutoMinA101Pr6N-Bold.otf}%
     {A-OTF-GothicBBBPr6N-Medium.otf}{A-OTF-FutoGoB101Pr6N-Bold.otf}%
-    {A-OTF-GothicBBBPr6N-Medium.otf}{RawFeature=-palt;-kern}}
-\zxjf@declare@preset{morisawa-pr6n/prop}{%
-  \zxjf@multiweight@opt{A-OTF-RyuminPr6N-Light.otf}{A-OTF-FutoMinA101Pr6N-Bold.otf}%
-    {A-OTF-GothicBBBPr6N-Medium.otf}{A-OTF-FutoGoB101Pr6N-Bold.otf}%
-    {A-OTF-GothicBBBPr6N-Medium.otf}{RawFeature=+palt;+kern}}
-\zxjf@declare@preset{yu-win}{%
-  \zxjf@multiweight@opt{YuMincho-Regular}{YuMincho-Demibold}%
+    {A-OTF-GothicBBBPr6N-Medium.otf}}
+\zxjf@declare@preset@with@prop{yu-win}{%
+  \zxjf@multiweight{YuMincho-Regular}{YuMincho-Demibold}%
     {YuGothic-Regular}{YuGothic-Bold}%
-    {YuGothic-Regular}{RawFeature=-palt;-kern}}
-\zxjf@declare@preset{yu-win/prop}{%
-  \zxjf@multiweight@opt{YuMincho-Regular}{YuMincho-Demibold}%
-    {YuGothic-Regular}{YuGothic-Bold}%
-    {YuGothic-Regular}{RawFeature=+palt;+kern}}
+    {YuGothic-Regular}}
 \zxjf@declare@preset@with@prop{yu-win10}{%
-  \zxjf@multiweight@opt{YuMincho-Regular}{YuMincho-Demibold}%
+  \zxjf@multiweight{YuMincho-Regular}{YuMincho-Demibold}%
     {YuGothic-Regular}{YuGothic-Bold}%
     {YuGothic-Medium}}
-\zxjf@declare@preset{yu-osx}{%
-  \zxjf@multiweight@opt{YuMincho-Medium}{YuMincho-Demibold}%
+\zxjf@declare@preset@with@prop{yu-osx}{%
+  \zxjf@multiweight{YuMincho-Medium}{YuMincho-Demibold}%
     {YuGothic-Medium}{YuGothic-Bold}%
-    {YuGothic-Medium}{RawFeature=-palt;-kern}}
-\zxjf@declare@preset{yu-osx/prop}{%
-  \zxjf@multiweight@opt{YuMincho-Medium}{YuMincho-Demibold}%
-    {YuGothic-Medium}{YuGothic-Bold}%
-    {YuGothic-Medium}{RawFeature=+palt;+kern}}
+    {YuGothic-Medium}}
 \zxjf@declare@preset@with@prop{sourcehan}{%
-  \zxjf@multiweight@opt{SourceHanSerif-Regular}{SourceHanSerif-Bold}%
+  \zxjf@multiweight{SourceHanSerif-Regular}{SourceHanSerif-Bold}%
     {SourceHanSans-Regular}{SourceHanSans-Bold}%
     {SourceHanSans-Medium}}
 \zxjf@declare@preset@with@prop{sourcehan-jp}{%
-  \zxjf@multiweight@opt{SourceHanSerifJP-Regular}{SourceHanSerifJP-Bold}%
+  \zxjf@multiweight{SourceHanSerifJP-Regular}{SourceHanSerifJP-Bold}%
     {SourceHanSansJP-Regular}{SourceHanSansJP-Bold}%
     {SourceHanSansJP-Medium}}
 \zxjf@declare@preset@with@prop{noto}{%
-  \zxjf@multiweight@opt{NotoSerifCJKjp-Regular}{NotoSerifCJKjp-Bold}%
+  \zxjf@multiweight{NotoSerifCJKjp-Regular}{NotoSerifCJKjp-Bold}%
     {NotoSansCJKjp-Regular}{NotoSansCJKjp-Bold}%
     {NotoSansCJKjp-Medium}}
 \zxjf@declare@preset@with@prop{noto-jp}{%
-  \zxjf@multiweight@opt{NotoSerifJP-Regular}{NotoSerifJP-Bold}%
+  \zxjf@multiweight{NotoSerifJP-Regular}{NotoSerifJP-Bold}%
     {NotoSansJP-Regular}{NotoSansJP-Bold}%
     {NotoSansJP-Medium}}
 \zxjf@declare@preset@with@prop{haranoaji}{%
-  \zxjf@multiweight@opt{HaranoAjiMincho-Regular}{HaranoAjiMincho-Bold}%
+  \zxjf@multiweight{HaranoAjiMincho-Regular}{HaranoAjiMincho-Bold}%
     {HaranoAjiGothic-Regular}{HaranoAjiGothic-Bold}%
     {HaranoAjiGothic-Medium}}
 %(alias)
@@ -377,6 +344,10 @@
 \zxjf@declare@preset@alias@with@prop{noto-otf}{noto}
 \zxjf@declare@preset@alias@with@prop{hiragino}{hiragino-pro}
 
+%% \zxjf@declare@sub@preset@nf@with@prop{<name>}{<fam>}{<font>}
+\zxjf@onlypreamble@def\zxjf@declare@sub@preset@nf@with@prop#1#2#3{%
+  \zxjf@declare@preset{#1}{\zxjf@newfamily{#2}{RawFeature=-palt;-kern}{#3}}%
+  \zxjf@declare@preset{#1/prop}{\zxjf@newfamily{#2}{RawFeature=+palt;+kern}{#3}}}
 %% definitions of sub preset mappings
 \zxjf@declare@preset{hg}{%
   \zxjf@newfamily{hgmc}{BoldFont=HGSMinchoE}{HGSMinchoB}%
@@ -400,16 +371,11 @@
   \zxjf@newfamily{hggs}{}{HGPGyoshotai}%
   \zxjf@newfamily{hgpp}{}{HGPSoeiKakupoptai}%
 }
-\zxjf@declare@preset{hiraginomg-pro}{%
-  \zxjf@newfamily{hmg}{RawFeature=-palt;-kern}{Hiragino Maru Gothic Pro W4}}
-\zxjf@declare@preset{hiraginomg-pro/prop}{%
-  \zxjf@newfamily{hmg}{RawFeature=+palt;+kern}{Hiragino Maru Gothic Pro W4}}
-\zxjf@declare@preset{hiraginomg-pron}{%
-  \zxjf@newfamily{hmg}{RawFeature=-palt;-kern}{Hiragino Maru Gothic ProN W4}}
-\zxjf@declare@preset{hiraginomg-pron/prop}{%
-  \zxjf@newfamily{hmg}{RawFeature=+palt;+kern}{Hiragino Maru Gothic ProN W4}}
-\zxjf@declare@preset@alias{hiraginomg}{hiraginomg-pro}
-\zxjf@declare@preset@alias{hiraginomg/prop}{hiraginomg-pro/prop}
+\zxjf@declare@sub@preset@nf@with@prop{hiraginomg-pro}%
+  {hmg}{Hiragino Maru Gothic Pro W4}
+\zxjf@declare@sub@preset@nf@with@prop{hiraginomg-pron}%
+  {hmg}{Hiragino Maru Gothic ProN W4}
+\zxjf@declare@preset@alias@with@prop{hiraginomg}{hiraginomg-pro}
 
 \zxjf@declare@preset{mobo}{%
   \zxjf@newfamily{mobo}{BoldFont=MoboExGothic Bold}{MoboExGothic}}

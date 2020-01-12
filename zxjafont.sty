@@ -10,7 +10,7 @@
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{zxjafont}[2020/01/12 v0.6]
+\ProvidesPackage{zxjafont}[2020/01/12 v0.7-pre]
 \def\zxjf@pkgname{zxjafont}
 
 %% preparation
@@ -43,10 +43,10 @@
 \newif\ifzxjf@oneweight
 \let\zxjf@cjkshape\zxjf@cjkshape@@none
 \let\zxjf@scale\relax
-\let\zxjf@feat\@empty
+\let\zxjf@feature\@empty
 \newif\ifzxjf@zxjatype
 
-%% \zxjf@main@preset
+%% \zxjf@all@main@preset
 \def\zxjf@all@main@preset{%
   %(uniweight)
   ms,ipa,ipaex,%
@@ -58,7 +58,7 @@
   %(alias)
   kozuka,morisawa,moga-mobo-ex,noto-otf,hiragino}
 
-%% \zxjf@main@sub@preset
+%% \zxjf@all@sub@preset
 \def\zxjf@all@sub@preset{%
   hg,hiraginomg-pro,hiraginomg-pron,mobo,mobo-90,maruberi,%
   hiraginomg}
@@ -94,12 +94,12 @@
 }\do{\DeclareOption{\zxjf@x}{\zxjf@err@abpre{\CurrentOption}}}
 
 %% options using keyval
-\DeclareOption*{\def\zxjf@nxt{\setkeys{zxjf}}%
-  \expandafter\zxjf@nxt\expandafter{\CurrentOption}}
+\DeclareOption*{\def\zxjf@do{\setkeys{zxjf}}%
+  \expandafter\zxjf@do\expandafter{\CurrentOption}}
 % 'scale=<real>'
 \define@key{zxjf}{scale}{\def\zxjf@scale{#1}}
 % 'feature=<text>'
-\define@key{zxjf}{feature}{\def\zxjf@feat{#1}}
+\define@key{zxjf}{feature}{\def\zxjf@feature{#1}}
 
 %% dispatch
 \let\@org@use@ption\@use@ption
@@ -115,7 +115,7 @@
     \space\space\zxjf@all@main@preset}
 \expandafter\endinput\fi\relax
 
-%% detect bxjatype
+%% detect zxjatype
 \@ifpackageloaded{zxjatype}{\zxjf@zxjatypetrue}{}
 \AtBeginDocument{%
   \unless\ifzxjf@zxjatype
@@ -153,37 +153,37 @@
 \fi
 
 %% resolve CJKshape
-\edef\zxjf@feat{%
+\edef\zxjf@feature{%
   \ifcase\zxjf@cjkshape % none
   \or CJKShape=JIS1990,% 90jis
   \or CJKShape=JIS2004,% jis2004
   \fi
-  \zxjf@feat}
+  \zxjf@feature}
 
-%% \zxjf@xfeat
+%% \zxjf@whole@feature
 % All fontspec options including scale.
-\edef\zxjf@xfeat{Scale=\zxjf@scale,\zxjf@feat}
-\bxDebug{zxjafont>>scale=\zxjf@scale/feat={\zxjf@feat}/%
+\edef\zxjf@whole@feature{Scale=\zxjf@scale,\zxjf@feature}
+\bxDebug{zxjafont>>scale=\zxjf@scale/feat={\zxjf@feature}/%
   preset=\zxjf@main@preset/\zxjf@sub@preset}
 
 %--------------------------------------- font setup helpers
 
 %% \zxjf@setmainfont{<attributes>}{<fam_name>}, etc.
 \ifzxjf@zxjatype
-\def\zxjf@setmainfont#1{\setjamainfont[\zxjf@xfeat,#1]}
-\def\zxjf@setsansfont#1{\setjasansfont[\zxjf@xfeat,#1]}
-\def\zxjf@setmonofont#1{\setjamonofont[\zxjf@xfeat,#1]}
+\def\zxjf@setmainfont#1{\setjamainfont[\zxjf@whole@feature,#1]}
+\def\zxjf@setsansfont#1{\setjasansfont[\zxjf@whole@feature,#1]}
+\def\zxjf@setmonofont#1{\setjamonofont[\zxjf@whole@feature,#1]}
 \def\zxjf@newfamily#1#2#3{%
   \csedef{#1family}{%
     \expandonce{\csname a#1family\endcsname}\noexpand\CJKfamily{#1}}%
-  \expandafter\newfontfamily\csname a#1family\endcsname[\zxjf@feat,#2]{#3}%
-  \setjafamilyfont{#1}[\zxjf@xfeat,#2]{#3}}
+  \expandafter\newfontfamily\csname a#1family\endcsname[\zxjf@feature,#2]{#3}%
+  \setjafamilyfont{#1}[\zxjf@whole@feature,#2]{#3}}
 \else
-\def\zxjf@setmainfont#1{\setmainfont[\zxjf@xfeat,#1]}
-\def\zxjf@setsansfont#1{\setsansfont[\zxjf@xfeat,#1]}
-\def\zxjf@setmonofont#1{\setmonofont[\zxjf@xfeat,#1]}
+\def\zxjf@setmainfont#1{\setmainfont[\zxjf@whole@feature,#1]}
+\def\zxjf@setsansfont#1{\setsansfont[\zxjf@whole@feature,#1]}
+\def\zxjf@setmonofont#1{\setmonofont[\zxjf@whole@feature,#1]}
 \def\zxjf@newfamily#1#2{%
-  \expandafter\newfontfamily\csname #1family\endcsname[\zxjf@xfeat,#2]}
+  \expandafter\newfontfamily\csname #1family\endcsname[\zxjf@whole@feature,#2]}
 \fi
 
 %--------------------------------------- preset japanese font mappings
@@ -230,10 +230,10 @@
 
 %% \zxjf@use@preset{<name>}
 \def\zxjf@use@preset#1{%
-  \undef\zxjf@nxt
-  \ifzxjf@prop \letcs\zxjf@nxt{zxjf@the@preset@#1/prop}\fi
-  \unless\ifdefined\zxjf@nxt \letcs\zxjf@nxt{zxjf@the@preset@#1}\fi
-  \zxjf@nxt}
+  \undef\zxjf@do
+  \ifzxjf@prop \letcs\zxjf@do{zxjf@the@preset@#1/prop}\fi
+  \unless\ifdefined\zxjf@do \letcs\zxjf@do{zxjf@the@preset@#1}\fi
+  \zxjf@do}
 
 %% definitions of main preset mappings
 \zxjf@declare@preset{ms}{%

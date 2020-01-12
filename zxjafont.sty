@@ -22,12 +22,16 @@
 %% packages
 \RequirePackage{fontspec}
 \RequirePackage{keyval}
-\RequirePackage{etoolbox}
+\RequirePackage{etoolbox}[2011/01/03]% v2.1
 
 %% errors
 \def\zxjf@err@ivval#1#2{%
   \PackageError\zxjf@pkgname
    {Invalid value '#2' for option #1}\@ehc}
+
+%% \if\zxjf@isvalid{<csname>}...\fi
+\def\zxjf@isvalid#1{%
+  \ifcsvoid{#1}{F}{T}T}
 
 %--------------------------------------- handle options
 
@@ -136,8 +140,8 @@
   % and \__zxjt_scale_tl.
   \ifzxjf@zxjatype
     \ifdefined\JaFontScale \let\zxjf@scale\JaFontScale
-    \else\ifdefined\zxjt@scale \let\zxjf@scale\zxjt@scale
-    \else\ifcsname __zxjt_scale_tl\endcsname
+    \else\if\zxjf@isvalid{zxjt@scale}\let\zxjf@scale\zxjt@scale
+    \else\if\zxjf@isvalid{__zxjt_scale_tl}%
       \letcs\zxjf@scale{__zxjt_scale_tl}
     \fi\fi\fi
   \fi
@@ -370,8 +374,8 @@
 \zxjf@declare@preset@alias@with@prop{kozuka}{kozuka-pro}
 \zxjf@declare@preset@alias@with@prop{morisawa}{morisawa-pro}
 \zxjf@declare@preset@alias{moga-mobo-ex}{moga}
-\zxjf@declare@preset@alias{noto-otf}{noto}
-\zxjf@declare@preset@alias{hiragino}{hiragino-pro}
+\zxjf@declare@preset@alias@with@prop{noto-otf}{noto}
+\zxjf@declare@preset@alias@with@prop{hiragino}{hiragino-pro}
 
 %% definitions of sub preset mappings
 \zxjf@declare@preset{hg}{%
@@ -408,9 +412,9 @@
 \zxjf@declare@preset@alias{hiraginomg/prop}{hiraginomg-pro/prop}
 
 \zxjf@declare@preset{mobo}{%
-  \zxjf@newfamily{mobo}{Bold=MoboExGothic Bold}{MoboExGothic}}
+  \zxjf@newfamily{mobo}{BoldFont=MoboExGothic Bold}{MoboExGothic}}
 \zxjf@declare@preset{mobo-90}{%
-  \zxjf@newfamily{mobo}{Bold=MoboEx90Gothic Bold}{MoboEx90Gothic}}
+  \zxjf@newfamily{mobo}{BoldFont=MoboEx90Gothic Bold}{MoboEx90Gothic}}
 \zxjf@declare@preset{maruberi}{%
   \zxjf@newfamily{mmg}{}{MotoyaLMaru}}
 

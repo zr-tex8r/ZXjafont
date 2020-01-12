@@ -12,8 +12,10 @@ simply by referring to their name.
 
 ### SYSTEM REQUIREMENTS
 
-  - TeX format: XeLaTeX.
-  - Prerequisite packages: fontspec.
+  * TeX format: LaTeX.
+  * TeX engine: XeTeX.
+  * Prerequisite packages:
+      - fontspec
 
 ### INSTALLATION
 
@@ -27,14 +29,24 @@ And rehash your TEXMF trees if necessary.
 
 This package is distributed under the MIT License.
 
+
+zxjafont Package ー main
+------------------------
+
+Please refer to the manual `zxjafont.pdf` (in Japanese) for detail.
+
+
 Revision History
 ----------------
 
+  * Version 0.6  〈2020/01/12〉
+      - New preset: `haranoaji` (thanks: doraTeX).
+      - `hiragino` is made an alias for `hiragino-pro`.
   * Version 0.5  〈2019/06/29〉
       - More aliases are provided.
       - The deprecated presets are abolished.
   * Version 0.4  〈2018/05/04〉
-      - New preets: `yu-win10`, `sourcehan(-jp)`, `noto(-jp)`, `ume`.
+      - New presets: `yu-win10`, `sourcehan(-jp)`, `noto(-jp)`, `ume`.
       - New options: `90jis`, `jis2004`.
       - The use of deprecated presets is warned.
   * Version 0.3  〈2015/05/08〉
@@ -46,4 +58,4 @@ Revision History
 
 --------------------
 Takayuki YATO (aka. "ZR")  
-http://zrbabbler.sp.land.to/
+https://github.com/zr-tex8r

@@ -36,6 +36,9 @@ zxjafont パッケージ ー 本体
 更新履歴
 --------
 
+  * Version 0.6  〈2020/01/12〉
+      - プリセット追加：`haranoaji` （thanks：doraTeX 氏）。
+      - `hiragino` を `hiragino-pro` の別名とする。
   * Version 0.5  〈2019/06/29〉
       - 非推奨のプリセットを廃止した。
       - 他パッケージとの互換のため、オプションやプリセットの別名を追加。
@@ -52,4 +55,4 @@ zxjafont パッケージ ー 本体
 
 --------------------
 Takayuki YATO (aka. "ZR")  
-http://zrbabbler.sp.land.to/
+https://github.com/zr-tex8r

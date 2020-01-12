@@ -12,12 +12,13 @@
 \bxtexlogoimport{*}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
-\newcommand{\PkgVersion}{0.5}
-\newcommand{\PkgDate}{2019/06/29}
+\newcommand{\PkgVersion}{0.6}
+\newcommand{\PkgDate}{2020/01/12}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
 \newcommand{\Means}{：\ }
+\newcommand{\JEmph}{\textgt}
 %-----------------------------------------------------------
 \begin{document}
 \title{\Pkg{zxjafont} パッケージ（v\PkgVersion）}
@@ -33,7 +34,7 @@
 {\pLaTeX}\>よりも格段に使い易いが、
 日本語を扱うためには必ず何らかの設定を行う必要があり、
 これが煩わしく感じられる場合もある。
-本パッケージでは、{\pLaTeX}\>において
+本パッケージでは、日本語{\LaTeX}\>において
 一般的に行われている設定を予め用意しておいて、
 簡単に呼び出せるようにしている。
 
@@ -60,7 +61,7 @@
 {\XeLaTeX}\>には和文と欧文の元来の区別がないので、
 このパッケージで指定するフォントが全ての文字に通用する。
 ただし、\Pkg{zxjatype}パッケージでは和文と欧文を区別するので、
-それと併用の場合は和文のみにフォント設定が適用される。
+それと併用の場合は\JEmph{和文のみ}にフォント設定が適用される。
 
 %-------------------
 \subsection{メイン設定}
@@ -75,6 +76,12 @@
 引き継いでいる。
 設定内容の詳細については、\Pkg{pxchfon}の説明書を
 参照してほしい。
+
+\Note かつての\Pkg{fontspec}では取り扱うフォントのウェイトが
+通常（|\mdseries|）と太字（|\bfseries|）の2つに限られていた。
+現在の\Pkg{fontspec}では追加のウェイトがサポートされているが、
+残念ながら現状の\Pkg{zxjafont}はまだ3ウェイト以上の設定には
+対応できていない。
 
 \paragraph{単ウェイト用の設定}
 明朝・ゴシック各々1ウェイトのみを用いる設定。
@@ -95,11 +102,11 @@ IPAexフォント。
 \Note {\XeTeX}\>は「フォント非埋込のPDF生成」に対応していない。
 
 \paragraph{多ウェイト用の設定}
-明朝・ゴシック各々2ウェイトを用いる設定
-\footnote{\Pkg{fontspec}では3ウェイト以上の設定ができない。）}。
+明朝・ゴシック各々2ウェイトを用いる設定。
 セリフに明朝、サンセリフと等幅にゴシックを割り当て、
 各々について通常（|\mdseries|）と太字（|\bfseries|）
 を個別に設定する。
+
 \begin{itemize}
 \item |ms-hg|\Means
   MSフォント + HGフォント。
@@ -150,6 +157,8 @@ IPAexフォント。
 \item |noto-jp|\Means
   Noto Serif JP + Noto Sans JP、
   日本用地域別サブセット版。
+\item |haranoaji|\Means
+  原ノ味フォント。
 \end{itemize}
 
 \paragraph{他パッケージとの互換用のオプション}
@@ -169,17 +178,21 @@ IPAexフォント。
 \item |noto-otf|\Means
   |noto| の別名。
   （\Pkg{luatexja-preset}でのプリセット名。）
+\item |hiragino|\Means
+  |hiragino-pro| の別名。
+  （\Pkg{ptex-fontmaps}でのプリセット名。）
+  \Note 0.6版で追加。
+  0,4版以前では |hiragino| が別の設定を指していたが、
+  これは0.5版で廃止された。
 \end{itemize}
-
-\Note なお、|hiragino-pro| と同義の\Pkg{ptex-fontmaps}の
-プリセット名は |hiragino| であるが、本パッケージの |hiragino| は
-旧版で用いられていた設定であり |hiragino-pro| とは異なる。
 
 \paragraph{廃止されたプリセット設定}
 
 0.2a版以前で用意されていた次のプリセット設定は、
 0.5版において廃止された。
 現在は指定するとエラーが発生する。
+
+\Note たあし |hiragino| は現在は |hiragino-pro| の別名と解釈される。
 
 \begin{quote}
 |kozuka4|、|kozuka6|、|kozuka6n|、|hiragino|、
@@ -233,17 +246,14 @@ Moboフォント（90／2000JIS字形）を使う設定。
 \item |\mmgfamily|\Means モトヤLマルベリ3等幅
 \end{itemize}
 \end{itemize}
-\Note \Pkg{fontspec}では取り扱うフォントのウェイトを通常（|\mdseries|）
-と太字（|\bfseries|）の2つに制限している。
-多くのOSでの扱いに合わせているようである。
 
 %-------------------
 \subsection{その他のオプション}
 
 \begin{itemize}
 \item |oneweight|\Means
-複数ウェイト用のメイン設定を単ウェイトとして用いる。
-\Note \Pkg{pxchfon}の説明書において |\setminchofont|
+多ウェイト用のメイン設定を単ウェイトとして用いる。
+\Note \Pkg{pxchfon}の説明書の記述において |\setminchofont|
 と |\setgothicfont| で設定されているウェイトのフォント
 が用いられる。
 \item |nooneweight|\Means
@@ -261,6 +271,7 @@ Moboフォント（90／2000JIS字形）を使う設定。
 このオプションは指定できない（エラーになる）。
 \item |noprop|\Means
 |prop|の否定。
+（和文が）等幅のフォントを用いる。
 
 \item |scale=|\Meta{実数}\Means
 スケール値（\Pkg{fontspec}の |Scale| 属性の値）。
@@ -275,7 +286,7 @@ Moboフォント（90／2000JIS字形）を使う設定。
 2004JIS字形の使用を指定する。
 
 \item |feature={|\Meta{属性リスト}|}|\Means
-このパッケージで指定されるフォント全体に通用する
+このパッケージで指定されるフォント全てに通用する
 \Pkg{fontspec}の属性の指定。
 
 \end{itemize}

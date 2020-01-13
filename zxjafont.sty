@@ -225,13 +225,13 @@
 \zxjf@declare@preset{}{}
 \zxjf@onlypreamble@def\zxjf@uniweight#1#2#3{%
   \zxjf@setmainfont{#3,BoldFont=#2}{#1}%
-  \zxjf@setsansfont{#3}{#2}%
-  \zxjf@setmonofont{#3}{#2}}
+  \zxjf@setsansfont{#3,BoldFont=#2}{#2}%
+  \zxjf@setmonofont{#3,BoldFont=#2}{#2}}
 \zxjf@onlypreamble@def\zxjf@multiweight#1#2#3#4#5#6{%
   \ifzxjf@oneweight
     \zxjf@setmainfont{#6,BoldFont=#5}{#1}%
-    \zxjf@setsansfont{#6}{#5}%
-    \zxjf@setmonofont{#6}{#5}%
+    \zxjf@setsansfont{#6,BoldFont=#5}{#5}%
+    \zxjf@setmonofont{#6,BoldFont=#5}{#5}%
   \else
     \zxjf@setmainfont{#6,BoldFont=#2}{#1}%
     \zxjf@setsansfont{#6,BoldFont=#4}{#3}%

@@ -171,34 +171,50 @@
 %% \zxjf@whole@feature
 % All fontspec options including scale.
 \edef\zxjf@whole@feature{%
-  Scale=\zxjf@scale,%
+  Scale=\zxjf@scale
   % CJKShape
   \ifcase\zxjf@cjkshape % none
-  \or CJKShape=JIS1990,% 90jis
-  \or CJKShape=JIS2004,% jis2004
+  \or ,CJKShape=JIS1990% 90jis
+  \or ,CJKShape=JIS2004% jis2004
   \fi
-  \zxjf@feature}
+  \ifdefined\zxjafontFeature
+    ,\expandonce\zxjafontFeature
+  \fi
+  \unless\ifx\zxjf@feature\@empty
+    ,\expandonce\zxjf@feature
+  \fi}
 \bxDebug{zxjafont>>scale=\zxjf@scale/feat={\zxjf@whole@feature}/%
   preset=\zxjf@main@preset/\zxjf@sub@preset}
 
 %--------------------------------------- font setup helpers
 
+%% \zxjf@font@set
+\zxjf@onlypreamble@def\zxjf@font@set#1#2{%
+  \noexpand#1[\expandonce\zxjf@whole@feature,#2]}
+%% \zxjf@newfamily@gen\CSnewjafamily
+\@onlypreamble\zxjf@newfamily@gen\edef\zxjf@newfamily@gen{%
+  \noexpand\zxjf@newfamily@gen@a
+      {\expandonce\zxjf@feature}{\expandonce\zxjf@whole@feature}}
+\zxjf@onlypreamble@def\zxjf@newfamily@gen@a#1#2#3{%
+  \def\zxjf@newfamily##1##2##3{%
+    \csedef{##1family}{%
+      \expandonce{\csname a##1family\endcsname}\noexpand\CJKfamily{##1}}%
+    \zxjf@with@cs\newfontfamily{a##1family}[#1,##2]{##3}%
+    #3{##1}[#2,##2]{##3}}}
+
 %% \zxjf@setmainfont{<attributes>}{<fam_name>}, etc.
 \ifzxjf@zxjatype
-\def\zxjf@setmainfont#1{\setjamainfont[\zxjf@whole@feature,#1]}
-\def\zxjf@setsansfont#1{\setjasansfont[\zxjf@whole@feature,#1]}
-\def\zxjf@setmonofont#1{\setjamonofont[\zxjf@whole@feature,#1]}
-\def\zxjf@newfamily#1#2#3{%
-  \csedef{#1family}{%
-    \expandonce{\csname a#1family\endcsname}\noexpand\CJKfamily{#1}}%
-  \zxjf@with@cs\newfontfamily{a#1family}[\zxjf@feature,#2]{#3}%
-  \setjafamilyfont{#1}[\zxjf@whole@feature,#2]{#3}}
+\edef\zxjf@setmainfont#1{\zxjf@font@set\setjamainfont{#1}}
+\edef\zxjf@setsansfont#1{\zxjf@font@set\setjasansfont{#1}}
+\edef\zxjf@setmonofont#1{\zxjf@font@set\setjamonofont{#1}}
+\zxjf@newfamily@gen{\setjafamilyfont}
 \else
-\def\zxjf@setmainfont#1{\setmainfont[\zxjf@whole@feature,#1]}
-\def\zxjf@setsansfont#1{\setsansfont[\zxjf@whole@feature,#1]}
-\def\zxjf@setmonofont#1{\setmonofont[\zxjf@whole@feature,#1]}
-\def\zxjf@newfamily#1#2{%
-  \zxjf@with@cs\newfontfamily{#1family}[\zxjf@whole@feature,#2]}
+\edef\zxjf@setmainfont#1{\zxjf@font@set\setmainfont{#1}}
+\edef\zxjf@setsansfont#1{\zxjf@font@set\setsansfont{#1}}
+\edef\zxjf@setmonofont#1{\zxjf@font@set\setmonofont{#1}}
+\edef\zxjf@newfamily#1#2{%
+  \unexpanded{\zxjf@with@cs\newfontfamily}{#1family}%
+      [\expandonce\zxjf@whole@feature,#2]}
 \fi
 
 %--------------------------------------- preset japanese font mappings

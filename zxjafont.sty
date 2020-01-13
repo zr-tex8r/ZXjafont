@@ -50,6 +50,11 @@
 
 %--------------------------------------- handle options
 
+%% errors
+\zxjf@onlypreamble@def\zxjf@warn@niopt#1{%
+  \PackageWarningNoLine\zxjf@pkgname
+   {Option '#1' is not implemented}}
+
 %% constants
 \chardef\zxjf@cjkshape@@none=0
 \chardef\zxjf@cjkshape@@xc=1    % 90jis
@@ -95,11 +100,17 @@
 % 'oneweight'
 \DeclareOption{oneweight}{\zxjf@oneweighttrue}
 \DeclareOption{nooneweight}{\zxjf@oneweightfalse}
+\DeclareOption{nodeluxe}{\zxjf@oneweighttrue}
+\DeclareOption{deluxe}{\zxjf@oneweightfalse}
 % '90jis'/'jis2004'
 \DeclareOption{jis90}{\let\zxjf@cjkshape\zxjf@cjkshape@@xc}
 \DeclareOption{90jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@xc}
 \DeclareOption{jis2004}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
 \DeclareOption{2004jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
+\DeclareOption{nojisshape}{\let\zxjf@cjkshape\zxjf@cjkshape@@none}
+% dummy options for compatibility with luatexja-preset
+\DeclareOption{match}{}% xeCJK always work as 'match' is on
+\DeclareOption{expert}{\zxjf@warn@niopt{expert}}
 
 % abolished presets
 \zxjf@onlypreamble@def\zxjf@err@abpre#1{%

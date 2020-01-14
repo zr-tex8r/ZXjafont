@@ -65,6 +65,7 @@
 \let\zxjf@sub@preset\@empty
 \newif\ifzxjf@prop
 \newif\ifzxjf@oneweight
+\newif\ifzxjf@bold
 \let\zxjf@cjkshape\zxjf@cjkshape@@none
 \let\zxjf@scale\relax
 \let\zxjf@feature\@empty
@@ -102,6 +103,9 @@
 \DeclareOption{nooneweight}{\zxjf@oneweightfalse}
 \DeclareOption{nodeluxe}{\zxjf@oneweighttrue}
 \DeclareOption{deluxe}{\zxjf@oneweightfalse}
+% 'bold'
+\DeclareOption{bold}{\zxjf@boldtrue}
+\DeclareOption{nobold}{\zxjf@boldfalse}
 % '90jis'/'jis2004'
 \DeclareOption{jis90}{\let\zxjf@cjkshape\zxjf@cjkshape@@xc}
 \DeclareOption{90jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@xc}
@@ -239,7 +243,11 @@
   \zxjf@setsansfont{#3,BoldFont=#2}{#2}%
   \zxjf@setmonofont{#3,BoldFont=#2}{#2}}
 \zxjf@onlypreamble@def\zxjf@multiweight#1#2#3#4#5#6{%
-  \ifzxjf@oneweight
+  \ifzxjf@bold
+    \zxjf@setmainfont{#6,BoldFont=#4}{#1}%
+    \zxjf@setsansfont{#6,BoldFont=#4}{#4}%
+    \zxjf@setmonofont{#6,BoldFont=#4}{#4}%
+  \else\ifzxjf@oneweight
     \zxjf@setmainfont{#6,BoldFont=#5}{#1}%
     \zxjf@setsansfont{#6,BoldFont=#5}{#5}%
     \zxjf@setmonofont{#6,BoldFont=#5}{#5}%
@@ -247,7 +255,7 @@
     \zxjf@setmainfont{#6,BoldFont=#2}{#1}%
     \zxjf@setsansfont{#6,BoldFont=#4}{#3}%
     \zxjf@setmonofont{#6,BoldFont=#4}{#3}%
-  \fi}
+  \fi\fi}
 %% \zxjf@declare@preset@with@prop{<name>}{<text>}
 \zxjf@onlypreamble@def\zxjf@declare@preset@with@prop#1#2{%
   \zxjf@declare@preset{#1}{#2{RawFeature=-palt;-kern}}%

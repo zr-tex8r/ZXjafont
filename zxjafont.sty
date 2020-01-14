@@ -63,6 +63,9 @@
 \chardef\zxjf@cjkshape@@none=0
 \chardef\zxjf@cjkshape@@xc=1    % 90jis
 \chardef\zxjf@cjkshape@@mmiv=2  % jis2004
+\chardef\zxjf@jatype@@none=0
+\chardef\zxjf@jatype@@xeCJK=1
+\chardef\zxjf@jatype@@zxjatype=2
 
 %% variables
 \let\zxjf@main@preset\relax
@@ -73,7 +76,8 @@
 \let\zxjf@cjkshape\zxjf@cjkshape@@none
 \let\zxjf@scale\relax
 \let\zxjf@feature\@empty
-\newif\ifzxjf@zxjatype
+\let\zxjf@jatype\zxjf@jatype@@none
+\newif\ifzxjf@ignore@jatype
 
 %% \zxjf@all@main@preset
 \zxjf@onlypreamble@def\zxjf@all@main@preset{%
@@ -116,6 +120,9 @@
 \DeclareOption{jis2004}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
 \DeclareOption{2004jis}{\let\zxjf@cjkshape\zxjf@cjkshape@@mmiv}
 \DeclareOption{nojisshape}{\let\zxjf@cjkshape\zxjf@cjkshape@@none}
+% 'ignorejatype'
+\DeclareOption{ignorejatype}{\zxjf@ignore@jatypetrue}
+\DeclareOption{noignorejatype}{\zxjf@ignore@jatypefalse}
 % dummy options for compatibility with luatexja-preset
 \DeclareOption{match}{}% xeCJK always work as 'match' is on
 \DeclareOption{expert}{\zxjf@warn@niopt{expert}}
@@ -150,18 +157,24 @@
     \space\space\zxjf@all@main@preset}
 \expandafter\endinput\fi\relax
 
-%% detect zxjatype
-\@ifpackageloaded{zxjatype}{\zxjf@zxjatypetrue}{}
-\AtBeginDocument{%
-  \unless\ifzxjf@zxjatype
-    \@ifpackageloaded{zxjatype}{%
-      \PackageError\zxjf@pkgname
-       {zxjatype must be loaded before me}\@ehc
-    }{}%
-  \fi}
-\ifzxjf@zxjatype\ifzxjf@prop
+%% detect zxjatype/xeCJK
+\unless\ifzxjf@ignore@jatype
+  \@ifpackageloaded{xeCJK}{\let\zxjf@jatype\zxjf@jatype@@xeCJK}{}
+  \@ifpackageloaded{zxjatype}{\let\zxjf@jatype\zxjf@jatype@@zxjatype}{}
+  \ifnum\zxjf@jatype=\zxjf@jatype@@none
+    \AtBeginDocument{%
+      \@ifpackageloaded{xeCJK}{%
+        \PackageError\zxjf@pkgname
+         {zxjatype/xeCJK must be loaded before zxjafont}\@ehc
+      }{}%
+    }
+  \fi
+\fi
+
+%% check for 'prop'
+\unless\ifnum\zxjf@jatype=\zxjf@jatype@@none\ifzxjf@prop
   \PackageError\zxjf@pkgname
-   {Option 'prop' cannot be used with zxjatype}\@ehc
+   {Option 'prop' cannot be used with zxjatype/xeCJK}\@ehc
   \zxjf@propfalse
 \fi\fi
 
@@ -169,7 +182,7 @@
 \ifx\zxjf@scale\relax
   % If zxjatype is used, try \zxjatypeJaScale, \zxjt@scale,
   % and \__zxjt_scale_tl.
-  \ifzxjf@zxjatype
+  \ifnum\zxjf@jatype=\zxjf@jatype@@zxjatype
     \ifdefined\zxjatypeJaScale \let\zxjf@scale\zxjatypeJaScale
     \else\if\zxjf@isvalid{zxjt@scale}\let\zxjf@scale\zxjt@scale
     \else\if\zxjf@isvalid{__zxjt_scale_tl}%
@@ -222,7 +235,12 @@
     #3{##1}[#2,##2]{##3}}}
 
 %% \zxjf@setmainfont{<attributes>}{<fam_name>}, etc.
-\ifzxjf@zxjatype
+\ifnum\zxjf@jatype=\zxjf@jatype@@xeCJK
+\edef\zxjf@setmainfont#1{\zxjf@font@set\setCJKmainfont{#1}}
+\edef\zxjf@setsansfont#1{\zxjf@font@set\setCJKsansfont{#1}}
+\edef\zxjf@setmonofont#1{\zxjf@font@set\setCJKmonofont{#1}}
+\zxjf@newfamily@gen{\setCJKfamilyfont}
+\else\ifnum\zxjf@jatype=\zxjf@jatype@@zxjatype
 \edef\zxjf@setmainfont#1{\zxjf@font@set\setjamainfont{#1}}
 \edef\zxjf@setsansfont#1{\zxjf@font@set\setjasansfont{#1}}
 \edef\zxjf@setmonofont#1{\zxjf@font@set\setjamonofont{#1}}
@@ -234,7 +252,7 @@
 \edef\zxjf@newfamily#1#2{%
   \unexpanded{\zxjf@with@cs\newfontfamily}{#1family}%
       [\expandonce\zxjf@whole@feature,#2]}
-\fi
+\fi\fi
 
 %--------------------------------------- preset japanese font mappings
 

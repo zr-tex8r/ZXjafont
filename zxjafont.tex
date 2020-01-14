@@ -12,8 +12,8 @@
 \bxtexlogoimport{*}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
-\newcommand{\PkgVersion}{0.6}
-\newcommand{\PkgDate}{2020/01/12}
+\newcommand{\PkgVersion}{0.7}
+\newcommand{\PkgDate}{2020/01/18}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
@@ -192,7 +192,7 @@ IPAexフォント。
 0.5版において廃止された。
 現在は指定するとエラーが発生する。
 
-\Note たあし |hiragino| は現在は |hiragino-pro| の別名と解釈される。
+\Note ただし |hiragino| は現在は |hiragino-pro| の別名と解釈される。
 
 \begin{quote}
 |kozuka4|、|kozuka6|、|kozuka6n|、|hiragino|、
@@ -251,13 +251,25 @@ Moboフォント（90／2000JIS字形）を使う設定。
 \subsection{その他のオプション}
 
 \begin{itemize}
-\item |oneweight|\Means
+\item |oneweight|（または|nodeluxe|）\Means
 多ウェイト用のメイン設定を単ウェイトとして用いる。
 \Note \Pkg{pxchfon}の説明書の記述において |\setminchofont|
 と |\setgothicfont| で設定されているウェイトのフォント
 が用いられる。
-\item |nooneweight|\Means
+\item |nooneweight|（または|deluxe|）\Means
 |oneweight|の否定。
+\Note |(no)deluxe|は\Pkg{luatexja-preset}との互換の別名。
+
+\item |bold|\Means
+|oneweight|と同じく多ウェイト用のメイン設定を単ウェイトとして用いるが、
+この際のゴシック体のフォントとして太字ウェイトに相当するものを用いる。
+\Note \Pkg{pxchfon}の説明書の記述における |\setminchofont|
+と |\setboldgothicfont| のフォントが用いられる。
+\Note \Pkg{luatexja-preset}とは異なり、|bold|の指定自体が
+単ウェイト設定を強制する。
+|bold|と|oneweight|を同時に指定した場合は|bold|が優先する。
+\item |nobold|\Means
+|bold|の否定。
 
 \item |prop|\Means
 プロポーショナル幅のフォントを用いる。
@@ -274,7 +286,7 @@ Moboフォント（90／2000JIS字形）を使う設定。
 （和文が）等幅のフォントを用いる。
 
 \item |scale=|\Meta{実数}\Means
-スケール値（\Pkg{fontspec}の |Scale| 属性の値）。
+和文スケール値（\Pkg{fontspec}の |Scale| 属性の値）。
 既定値は、\Pkg{BXjscls}の文書クラスおよび
 \Pkg{zxjatype}パッケージで指定されている場合はその値、
 なければ1となる。
@@ -284,6 +296,9 @@ Moboフォント（90／2000JIS字形）を使う設定。
 
 \item |jis2004|／|2004jis|\Means
 2004JIS字形の使用を指定する。
+
+\item |nojisshape|\Means
+特定のJIS字形の使用の指定を行わない。
 
 \item |feature={|\Meta{属性リスト}|}|\Means
 このパッケージで指定されるフォント全てに通用する

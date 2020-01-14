@@ -39,6 +39,10 @@ Please refer to the manual `zxjafont.pdf` (in Japanese) for detail.
 Revision History
 ----------------
 
+  * Version 0.7  〈2020/01/18〉
+      - New options: `(no)bold`, `nojisshape`.
+      - New option aliases: `(no)deluxe`.
+      - Bug fix.
   * Version 0.6  〈2020/01/12〉
       - New preset: `haranoaji` (thanks: doraTeX).
       - `hiragino` is made an alias for `hiragino-pro`.

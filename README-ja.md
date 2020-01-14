@@ -36,6 +36,10 @@ zxjafont パッケージ ー 本体
 更新履歴
 --------
 
+  * Version 0.7  〈2020/01/18〉
+      - オプション追加：`(no)bold`、`nojisshape`。
+      - オプション別名：`(no)deluxe`。
+      - バグ修正。
   * Version 0.6  〈2020/01/12〉
       - プリセット追加：`haranoaji` （thanks：doraTeX 氏）。
       - `hiragino` を `hiragino-pro` の別名とする。

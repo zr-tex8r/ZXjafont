@@ -163,10 +163,10 @@
 
 %% decide scale factor
 \ifx\zxjf@scale\relax
-  % If zxjatype is used, try \JaFontScale, \zxjt@scale,
+  % If zxjatype is used, try \zxjatypeJaScale, \zxjt@scale,
   % and \__zxjt_scale_tl.
   \ifzxjf@zxjatype
-    \ifdefined\JaFontScale \let\zxjf@scale\JaFontScale
+    \ifdefined\zxjatypeJaScale \let\zxjf@scale\zxjatypeJaScale
     \else\if\zxjf@isvalid{zxjt@scale}\let\zxjf@scale\zxjt@scale
     \else\if\zxjf@isvalid{__zxjt_scale_tl}%
       \letcs\zxjf@scale{__zxjt_scale_tl}

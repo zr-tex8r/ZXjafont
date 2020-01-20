@@ -33,6 +33,10 @@
   \PackageError\zxjf@pkgname
    {Invalid value '#2' for option #1}\@ehc}
 
+%% switch 'fontspec@mw'
+\newif\ifzxjf@fontspec@mw
+\@ifpackagelater{fontspec}{2014/06/01}{\zxjf@fontspec@mwtrue}{}% v2.4
+
 %% \zxjf@cond\ifXXX...\fi{<true>}{<false>}
 \@gobbletwo\if\if \def\zxjf@cond#1\fi{%
   #1\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi}
@@ -273,11 +277,18 @@
     \zxjf@setmainfont{#8,BoldFont=#7}{#2}%
     \zxjf@setsansfont{#8,BoldFont=#7}{#7}%
     \zxjf@setmonofont{#8,BoldFont=#7}{#7}%
+  \else\ifzxjf@fontspec@mw
+    \zxjf@setmainfont{#8,BoldFont=#3,
+        FontFace={l}{n}{#1}}{#2}%
+    \zxjf@setsansfont{#8,BoldFont=#5,
+        FontFace={eb}{n}{#6}}{#4}%
+    \zxjf@setmonofont{#8,BoldFont=#5,
+        FontFace={eb}{n}{#6}}{#4}%
   \else
     \zxjf@setmainfont{#8,BoldFont=#3}{#2}%
     \zxjf@setsansfont{#8,BoldFont=#5}{#4}%
     \zxjf@setmonofont{#8,BoldFont=#5}{#4}%
-  \fi\fi}
+  \fi\fi\fi}
 %% \zxjf@declare@preset@with@prop{<name>}{<text>}
 \zxjf@onlypreamble@def\zxjf@declare@preset@with@prop#1#2{%
   \zxjf@declare@preset{#1}{#2{RawFeature=-palt;-kern}}%

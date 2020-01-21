@@ -76,12 +76,18 @@
 \let\zxjf@sub@preset\@empty
 \newif\ifzxjf@prop
 \newif\ifzxjf@oneweight
+\newif\ifzxjf@threeweight
 \newif\ifzxjf@bold
 \let\zxjf@cjkshape\zxjf@cjkshape@@none
 \let\zxjf@scale\relax
 \let\zxjf@feature\@empty
 \let\zxjf@jatype\zxjf@jatype@@none
 \newif\ifzxjf@ignore@jatype
+
+%% default for 'threeweight'
+\ifzxjf@fontspec@mw
+  \zxjf@threeweighttrue
+\fi
 
 %% \zxjf@all@main@preset
 \zxjf@onlypreamble@def\zxjf@all@main@preset{%
@@ -115,6 +121,9 @@
 \DeclareOption{nooneweight}{\zxjf@oneweightfalse}
 \DeclareOption{nodeluxe}{\zxjf@oneweighttrue}
 \DeclareOption{deluxe}{\zxjf@oneweightfalse}
+% 'threeweight'
+\DeclareOption{threeweight}{\zxjf@threeweighttrue}
+\DeclareOption{nothreeweight}{\zxjf@threeweightfalse}
 % 'bold'
 \DeclareOption{bold}{\zxjf@boldtrue}
 \DeclareOption{nobold}{\zxjf@boldfalse}
@@ -180,6 +189,15 @@
   \PackageError\zxjf@pkgname
    {Option 'prop' cannot be used with zxjatype/xeCJK}\@ehc
   \zxjf@propfalse
+\fi\fi
+
+%% check for 'threeweight'
+\unless\ifzxjf@fontspec@mw\ifzxjf@threeweight
+  \PackageError\zxjf@pkgname
+   {Option 'threeweight' cannot be used, bebause\MessageBreak
+    your 'fontspec' is too old}
+   {\@ehc}
+  \zxjf@threeweightfalse
 \fi\fi
 
 %% decide scale factor
@@ -277,7 +295,7 @@
     \zxjf@setmainfont{#8,BoldFont=#7}{#2}%
     \zxjf@setsansfont{#8,BoldFont=#7}{#7}%
     \zxjf@setmonofont{#8,BoldFont=#7}{#7}%
-  \else\ifzxjf@fontspec@mw
+  \else\ifzxjf@threeweight
     \zxjf@setmainfont{#8,BoldFont=#3,
         FontFace={l}{n}{#1}}{#2}%
     \zxjf@setsansfont{#8,BoldFont=#5,
@@ -457,6 +475,21 @@
 \@for\zxjf@x:=\zxjf@sub@preset\do{\zxjf@use@preset\zxjf@x}
 
 %--------------------------------------- and some extras
+
+\ifzxjf@threeweight
+  %%<*> \ltdefault/\ltseries
+  \def\ltdefault{l}
+  \DeclareRobustCommand\ltseries{%
+    \not@math@alphabet\ltseries\relax
+    \fontseries\ltdefault\selectfont
+  }
+  %%<*> \ebdefault/\ebseries
+  \def\ebdefault{eb}
+  \DeclareRobustCommand\ebseries{%
+    \not@math@alphabet\ebseries\relax
+    \fontseries\ebdefault\selectfont
+  }
+\fi
 
 %%<*> \useeasyjapanesesettings
 \newcommand*\useeasyjapanesesettings{%

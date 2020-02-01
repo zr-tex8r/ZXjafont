@@ -39,6 +39,11 @@ Please refer to the manual `zxjafont.pdf` (in Japanese) for detail.
 Revision History
 ----------------
 
+  * Version 1.0  〈2020/02/02〉
+      - Now multiweight presets offer three weights per family. New
+        option `(no)threeweight` is added.
+      - Now use of xeCJK activates the Japanese-font mode.
+      - New option: `(no)ignorejatype`.
   * Version 0.7  〈2020/01/18〉
       - New options: `(no)bold`, `nojisshape`.
       - New option aliases: `(no)deluxe`.

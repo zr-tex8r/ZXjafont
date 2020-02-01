@@ -12,13 +12,14 @@
 \bxtexlogoimport{*}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
-\newcommand{\PkgVersion}{0.7}
-\newcommand{\PkgDate}{2020/01/18}
+\newcommand{\PkgVersion}{1.0}
+\newcommand{\PkgDate}{2020/02/02}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
 \newcommand{\Means}{：\ }
 \newcommand{\JEmph}{\textgt}
+\newcommand{\JSl}{\mbox{／}\linebreak[0]}
 %-----------------------------------------------------------
 \begin{document}
 \title{\Pkg{zxjafont} パッケージ（v\PkgVersion）}
@@ -32,10 +33,10 @@
 {\XeLaTeX}＋\Pkg{fontspec}でのフォントファミリ名を直接指定する方式は
 「好きなフォントを指定する」という点では、
 {\pLaTeX}\>よりも格段に使い易いが、
-日本語を扱うためには必ず何らかの設定を行う必要があり、
+日本語を扱うためには必ず何らかのフォント設定を行う必要があり、
 これが煩わしく感じられる場合もある。
-本パッケージでは、日本語{\LaTeX}\>において
-一般的に行われている設定を予め用意しておいて、
+本パッケージでは、日本語\>{\LaTeX}\>において
+一般的に行われている日本語用フォント設定を予め用意しておいて、
 簡単に呼び出せるようにしている。
 
 \paragraph{前提環境}\mbox{}
@@ -59,29 +60,28 @@
 \Meta{サブ設定}と\Meta{他オプション}は任意個数指定可能である。
 もし\Pkg{fontspec}が未読込の場合は自動的に読み込む。
 {\XeLaTeX}\>には和文と欧文の元来の区別がないので、
-このパッケージで指定するフォントが全ての文字に通用する。
-ただし、\Pkg{zxjatype}パッケージでは和文と欧文を区別するので、
-それと併用の場合は\JEmph{和文のみ}にフォント設定が適用される。
+このパッケージで指定するフォントが全ての文字に通用される。
+ただし、\Pkg{xeCJK}パッケージや\Pkg{zxjatype}パッケージの
+日本語処理機能を利用する場合には和文と欧文が区別されるようになり、
+この場合は\JEmph{和文のみ}にフォント設定が適用される。
 
 %-------------------
 \subsection{メイン設定}
 
-総称ファミリの設定
-（\Pkg{fontspec}の |\setmainfont|、|\setsansfont|、|\setmonofont|）
+総称ファミリに関する設定、すなわち、
+\Pkg{fontspec}の\>|\setmainfont|\JSl|\setsansfont|\JSl|\setmonofont|\>%
+（\Pkg{xeCJK}\JSl\Pkg{zxjatype}併用時は\>%
+|\setCJKmainfont|\JSl|\setCJKsansfont|\JSl|\setCJKmonofont|）
 を行うもの。
 
 \Note 「メイン設定」は\Pkg{pxchfon}パッケージにおける
 「プリセット設定」をそのまま
-（ただし明朝・ゴシック2ウェイトに縮減して）
 引き継いでいる。
-設定内容の詳細については、\Pkg{pxchfon}の説明書を
-参照してほしい。
+設定内容の詳細については、
+\JEmph{\Pkg{pxchfon}の説明書を参照してほしい}。
 
-\Note かつての\Pkg{fontspec}では取り扱うフォントのウェイトが
-通常（|\mdseries|）と太字（|\bfseries|）の2つに限られていた。
-現在の\Pkg{fontspec}では追加のウェイトがサポートされているが、
-残念ながら現状の\Pkg{zxjafont}はまだ3ウェイト以上の設定には
-対応できていない。
+\Note 1.0版より、\Pkg{pxchfon}パッケージの多ウェイト設定について
+明朝・ゴシックの3ウェイトが全てサポートされるようになった。
 
 \paragraph{単ウェイト用の設定}
 明朝・ゴシック各々1ウェイトのみを用いる設定。
@@ -99,13 +99,34 @@ IPAフォント。
 \item |ipaex|\Means
 IPAexフォント。
 \end{itemize}
-\Note {\XeTeX}\>は「フォント非埋込のPDF生成」に対応していない。
+\Note {\XeTeX}\>は「フォント非埋込のPDF生成」に対応していないので、
+|noembed| 設定は存在しない。
+
+例えば、メイン設定\>|ms|\>は以下の\Pkg{fontspec}の設定を行う：
+\begin{quote}\small\begin{verbatim}
+\setmainfont{MS-Mincho}[BoldFont=MS-Gothic]
+\setsansfont{MS-Gothic}[BoldFont=MS-Gothic]
+\setmonofont{MS-Gothic}[BoldFont=MS-Gothic]
+\end{verbatim}\end{quote}
+\Note \Pkg{xeCJK}\JSl\Pkg{zxjatype}読込時は和文用フォントの
+設定（|\setCJKmainfont|\>等）に置き換わり、またこの場合は
+和文スケール設定（|Scale|\>オプションキー）が追加される。
+これは以降で紹介する例についても同様である。
 
 \paragraph{多ウェイト用の設定}
-明朝・ゴシック各々2ウェイトを用いる設定。
-セリフに明朝、サンセリフと等幅にゴシックを割り当て、
-各々について通常（|\mdseries|）と太字（|\bfseries|）
-を個別に設定する。
+セリフ（|\rmfamily|）に明朝、
+サンセリフ（|\sffamily|）と等幅（|\ttfamily|）にゴシックを割り当て、
+各々について中字（|\mdseries|）と太字（|\bfseries|）のフォントを
+\Pkg{pxchfon}のプリセットと同様に個別に設定する。
+
+さらに、|threeweight|\>オプションが有効の場合は、
+{p\LaTeX}\>の\Pkg{japanese-otf}で\>|deluxe|\>オプションを指定したときと
+同様に、「明朝の細字（|\rmfamily\ltseries|）」と
+「ゴシックの極太（|\sffamily\ebseries|）」が指定できるようになり、
+明朝とゴシックの各々について3ウェイトのフォントが
+\Pkg{pxchfon}のプリセットと同様に個別に設定される。
+\Note |threeweight|\>オプションは通常は既定で有効になっている
+（詳細は後述）。
 
 \begin{itemize}
 \item |ms-hg|\Means
@@ -119,7 +140,7 @@ IPAexフォント。
   Mogaフォント（2004JIS字形）。
   \Note MogaEx系統が用いられる。
 \item |moga-90|\Means
-  Mogaフォント（90／2000JIS字形）。
+  Mogaフォント（90\JSl 2000JIS字形）。
   \Note MogaEx90系統が用いられる。
 \item |ume|\Means
   梅フォント。
@@ -161,9 +182,46 @@ IPAexフォント。
   原ノ味フォント。
 \end{itemize}
 
+例えば\>|haranoaji|\>オプションについて説明すると、%
+|threeweight|\>が有効の場合は以下の設定
+（3ウェイト）が行われる：
+\begin{quote}\small\begin{verbatim}
+\setmainfont{HaranoAjiMincho-Regular}[BoldFont=HaranoAjiMincho-Bold,
+    FontFace={l}{n}{HaranoAjiMincho-Light}]
+\setsansfont{HaranoAjiGothic-Regular}[BoldFont=HaranoAjiGothic-Bold,
+    FontFace={eb}{n}{HaranoAjiGothic-Heavy}]
+\setmonofont{HaranoAjiGothic-Regular}[BoldFont=HaranoAjiGothic-Bold,
+    FontFace={eb}{n}{HaranoAjiGothic-Heavy}]
+\end{verbatim}\end{quote}
+
+|threeweight|\>が無効の場合は以下の設定
+（中字・太字のみの2ウェイト）が行われる：
+\begin{quote}\small\begin{verbatim}
+\setmainfont{HaranoAjiMincho-Regular}[BoldFont=HaranoAjiMincho-Bold]
+\setsansfont{HaranoAjiGothic-Regular}[BoldFont=HaranoAjiGothic-Bold]
+\setmonofont{HaranoAjiGothic-Regular}[BoldFont=HaranoAjiGothic-Bold]
+\end{verbatim}\end{quote}
+
+|oneweight|\>オプション指定時は以下の設定
+（1ウェイトのみ）が行われる：
+\begin{quote}\small\begin{verbatim}
+\setmainfont{HaranoAjiMincho-Regular}[BoldFont=HaranoAjiMincho-Medium]
+\setsansfont{HaranoAjiGothic-Medium}[BoldFont=HaranoAjiGothic-Medium]
+\setmonofont{HaranoAjiGothic-Medium}[BoldFont=HaranoAjiGothic-Medium]
+\end{verbatim}\end{quote}
+\Note 他の例と異なりゴシックで“|HaranoAjiMincho-Medium|”%
+（\Pkg{pxchfon}のマニュアルのプリセットの解説で\>|\setgothicfont|\>に
+割り当てられているフォント）が使われていることに注意。
+
+そして\>|bold|\>オプション指定時は以下の設定が行われる：
+\begin{quote}\small\begin{verbatim}
+\setmainfont{HaranoAjiMincho-Regular}[BoldFont=HaranoAjiMincho-Bold]
+\setsansfont{HaranoAjiGothic-Bold}[BoldFont=HaranoAjiGothic-Bold]
+\setmonofont{HaranoAjiGothic-Bold}[BoldFont=HaranoAjiGothic-Bold]
+\end{verbatim}\end{quote}
+
 \paragraph{他パッケージとの互換用のオプション}
 \mbox{}
-%\Pkg{ptex-fontmaps}のプリセット名を別名として用意した。
 
 \begin{itemize}
 \item |kozuka|\Means
@@ -192,7 +250,8 @@ IPAexフォント。
 0.5版において廃止された。
 現在は指定するとエラーが発生する。
 
-\Note ただし |hiragino| は現在は |hiragino-pro| の別名と解釈される。
+\Note ただし |hiragino| については現在では |hiragino-pro| の別名と
+解釈される。
 
 \begin{quote}
 |kozuka4|、|kozuka6|、|kozuka6n|、|hiragino|、
@@ -235,9 +294,9 @@ Moboフォント（2004JIS字形）を使う設定。
 \end{itemize}
 
 \item |mobo-90|\Means
-Moboフォント（90／2000JIS字形）を使う設定。
+Moboフォント（90\JSl 2000JIS字形）を使う設定。
 \begin{itemize}
-\item |\mobofamily|\Means Moboフォント（90／2000JIS字形）
+\item |\mobofamily|\Means Moboフォント（90\JSl 2000JIS字形）
 \end{itemize}
 
 \item |maruberi|\Means
@@ -253,23 +312,31 @@ Moboフォント（90／2000JIS字形）を使う設定。
 \begin{itemize}
 \item |oneweight|（または|nodeluxe|）\Means
 多ウェイト用のメイン設定を単ウェイトとして用いる。
-\Note \Pkg{pxchfon}の説明書の記述において |\setminchofont|
-と |\setgothicfont| で設定されているウェイトのフォント
-が用いられる。
-\item |nooneweight|（または|deluxe|）\Means
-|oneweight|の否定。
-\Note |(no)deluxe|は\Pkg{luatexja-preset}との互換の別名。
+\Note \Pkg{pxchfon}のマニュアルのプリセットの記述に
+おいて\>|\setminchofont|\>と\>|\setgothicfont|\>で設定されている
+ウェイトのフォントが用いられる。
+\item |nooneweight|（または|deluxe|；既定）\Means
+|oneweight|\>の否定。
+\Note |(no)deluxe|\>は\Pkg{luatexja-preset}との互換の別名。
+
+\item |threeweight|（既定）\Means
+多ウェイト用のメイン設定を使う場合に3ウェイトを利用できるようにする。
+\item |nothreeweight|\Means
+|threeweight|\>の否定。
+多ウェイト用のメイン設定は2ウェイトのみ使える。
+\Note 既定は\>|threeweight|\>であるが、使用中の\Pkg{fontspec}の版が
+古くて追加ウェイトに対応できない場合は\>|nothreeweight|\>が既定になる。
 
 \item |bold|\Means
-|oneweight|と同じく多ウェイト用のメイン設定を単ウェイトとして用いるが、
+|oneweight|\>と同じく多ウェイト用のメイン設定を単ウェイトとして用いるが、
 この際のゴシック体のフォントとして太字ウェイトに相当するものを用いる。
-\Note \Pkg{pxchfon}の説明書の記述における |\setminchofont|
-と |\setboldgothicfont| のフォントが用いられる。
-\Note \Pkg{luatexja-preset}とは異なり、|bold|の指定自体が
+\Note \Pkg{pxchfon}の説明書の記述における\>|\setminchofont|\>%
+と\>|\setboldgothicfont|\>のフォントが用いられる。
+\Note \Pkg{luatexja-preset}とは異なり、|bold|\>の指定自体が
 単ウェイト設定を強制する。
-|bold|と|oneweight|を同時に指定した場合は|bold|が優先する。
-\item |nobold|\Means
-|bold|の否定。
+|bold|\>と\>|oneweight|\>を同時に指定した場合は\>|bold|\>が優先する。
+\item |nobold|（既定）\Means
+|bold|\>の否定。
 
 \item |prop|\Means
 プロポーショナル幅のフォントを用いる。
@@ -280,9 +347,10 @@ Moboフォント（90／2000JIS字形）を使う設定。
 がある場合はそれを優先させている。
 \Note \Pkg{zxjatype}を用いる場合は、
 和文は等幅フォントを用いることが前提なので、
-このオプションは指定できない（エラーになる）。
-\item |noprop|\Means
-|prop|の否定。
+このオプションは指定できずエラーになる。
+（現状では\Pkg{xeCJK}使用時も同じ。）
+\item |noprop|（既定）\Means
+|prop|\>の否定。
 （和文が）等幅のフォントを用いる。
 
 \item |scale=|\Meta{実数}\Means
@@ -291,18 +359,26 @@ Moboフォント（90／2000JIS字形）を使う設定。
 \Pkg{zxjatype}パッケージで指定されている場合はその値、
 なければ1となる。
 
-\item |jis90|／|90jis|\Means
+\item |jis90|\JSl|90jis|\Means
 90JIS字形（2000JIS字形）の使用を指定する。
-
-\item |jis2004|／|2004jis|\Means
+\item |jis2004|\JSl|2004jis|\Means
 2004JIS字形の使用を指定する。
-
-\item |nojisshape|\Means
+\item |nojisshape|（既定）\Means
 特定のJIS字形の使用の指定を行わない。
+
+\item |ignorejatype|\Means
+たとえ\Pkg{xeCJK}\JSl\Pkg{zxjatype}が読み込まれていたとしても
+それらを無視して、「和文欧文の区別がない」前提の動作を行う。
+\Note この場合「プリセットで指定した日本語フォントが\JEmph{欧文のみ}に
+適用される」という奇妙な動作になるため、このオプションの有用性は
+ほぼないと思われる。
+\item |noignorejatype|（既定）\Means
+|ignorejatype|\>の否定。
 
 \item |feature={|\Meta{属性リスト}|}|\Means
 このパッケージで指定されるフォント全てに通用する
 \Pkg{fontspec}の属性の指定。
+既定値は空。
 
 \end{itemize}
 

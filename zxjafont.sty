@@ -184,13 +184,6 @@
   \fi
 \fi
 
-%% check for 'prop'
-\unless\ifnum\zxjf@jatype=\zxjf@jatype@@none\ifzxjf@prop
-  \PackageError\zxjf@pkgname
-   {Option 'prop' cannot be used with zxjatype/xeCJK}\@ehc
-  \zxjf@propfalse
-\fi\fi
-
 %% check for 'threeweight'
 \unless\ifzxjf@fontspec@mw\ifzxjf@threeweight
   \PackageError\zxjf@pkgname

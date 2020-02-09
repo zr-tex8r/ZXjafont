@@ -39,6 +39,8 @@ Please refer to the manual `zxjafont.pdf` (in Japanese) for detail.
 Revision History
 ----------------
 
+  * Version 1.1  〈2020/02/08〉
+      - Now `prop` is available even in Japanese-font mode.
   * Version 1.0  〈2020/02/02〉
       - Now multiweight presets offer three weights per family. New
         option `(no)threeweight` is added.

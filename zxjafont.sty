@@ -10,7 +10,7 @@
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{zxjafont}[2020/02/08 v1.1]
+\ProvidesPackage{zxjafont}[2020/02/15 v1.1a-pre]
 \def\zxjf@pkgname{zxjafont}
 
 %% preparation
@@ -474,13 +474,15 @@
   \def\ltdefault{l}
   \DeclareRobustCommand\ltseries{%
     \not@math@alphabet\ltseries\relax
-    \fontseries\ltdefault\selectfont
+    % \fontseries{\ltdefault} fails on New NFSS
+    % unless alphabetic font also has 'l' series.
+    \edef\f@series{\ltdefault}\selectfont
   }
   %%<*> \ebdefault/\ebseries
   \def\ebdefault{eb}
   \DeclareRobustCommand\ebseries{%
     \not@math@alphabet\ebseries\relax
-    \fontseries\ebdefault\selectfont
+    \edef\f@series{\ebdefault}\selectfont
   }
 \fi
 

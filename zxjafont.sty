@@ -56,6 +56,13 @@
 \def\zxjf@isvalid#1{%
   \ifcsvoid{#1}{F}{T}T}
 
+%% \zxjf@if@font@exists
+\ifdefined\IfFontExistsTF
+  \let\zxjf@if@font@exists\IfFontExistsTF
+\else % fallback
+  \def\zxjf@if@font@exists#1{\@firstoftwo}
+\fi
+
 %--------------------------------------- handle options
 
 %% errors
@@ -342,8 +349,17 @@
   \zxjf@declare@preset@alias{#1}{#2}%
   \zxjf@declare@preset@alias{#1/prop}{#2/prop}}
 
+%% \zxjf@declare@preproc{<name>}{<text>}
+\zxjf@onlypreamble@def\zxjf@declare@preproc#1{%
+  \zxjf@with@cs\zxjf@onlypreamble@def{zxjf@the@preproc@#1}}
+%% \zxjf@declare@preproc@alias{<name1>}{<name2>}
+\zxjf@onlypreamble@def\zxjf@declare@preproc@alias#1#2{%
+  \zxjf@with@cs\@onlypreamble{zxjf@the@preproc@#1}%
+  \csletcs{zxjf@the@preproc@#1}{zxjf@the@preproc@#2}}
+
 %% \zxjf@use@preset{<name>}
 \zxjf@onlypreamble@def\zxjf@use@preset#1{%
+  \csuse{zxjf@the@preproc@#1}%
   \undef\zxjf@do
   \ifzxjf@prop \letcs\zxjf@do{zxjf@the@preset@#1/prop}\fi
   \unless\ifdefined\zxjf@do \letcs\zxjf@do{zxjf@the@preset@#1}\fi
@@ -371,10 +387,15 @@
   \zxjf@multiweight{IPAPMincho}{IPAPMincho}{HGPMinchoE}%
     {HGPGothicM}{HGGothicE}{hgrsgu.ttc}{IPAPGothic}{}}
 \zxjf@declare@preset{ipaex}{%
-  \zxjf@uniweight{ipaexm.ttf}{ipaexg.ttf}{}}
+  \zxjf@uniweight{\zxjf@Fa}{\zxjf@Fb}{}}
+\zxjf@declare@preproc{ipaex}{%
+  \zxjf@if@font@exists{ipaexm.ttf}%
+    {\def\zxjf@Fa{ipaexm.ttf}\def\zxjf@Fb{ipaexg.ttf}}%
+    {\def\zxjf@Fa{IPAexMincho}\def\zxjf@Fb{IPAexGothic}}}
 \zxjf@declare@preset{ipaex-hg}{%
-  \zxjf@multiweight{ipaexm.ttf}{ipaexm.ttf}{HGSMinchoE}%
-    {HGSGothicM}{HGSGothicE}{hgrsgu.ttc}{ipaexg.ttf}{}}
+  \zxjf@multiweight{\zxjf@Fa}{\zxjf@Fa}{HGSMinchoE}%
+    {HGSGothicM}{HGSGothicE}{hgrsgu.ttc}{\zxjf@Fb}{}}
+\zxjf@declare@preproc@alias{ipaex-hg}{ipaex}
 \zxjf@declare@preset{moga}{%
   \zxjf@multiweight{MogaExMincho}{MogaExMincho}{MogaExMincho Bold}%
     {MogaExGothic}{MogaExGothic Bold}{MogaExGothic Bold}{MogaExGothic}{}}
@@ -441,9 +462,12 @@
     {NotoSansJP-Regular}{NotoSansJP-Bold}{NotoSansJP-Black}%
     {NotoSansJP-Medium}}
 \zxjf@declare@preset@with@prop{haranoaji}{%
-  \zxjf@multiweight{HaranoAjiMincho-Light}{HaranoAjiMincho-Regular}{HaranoAjiMincho-Bold}%
-    {HaranoAjiGothic-Regular}{HaranoAjiGothic-Bold}{HaranoAjiGothic-Heavy}%
-    {HaranoAjiGothic-Medium}}
+  \zxjf@multiweight{HaranoAjiMincho-Light\zxjf@Fa}{HaranoAjiMincho-Regular\zxjf@Fa}{HaranoAjiMincho-Bold\zxjf@Fa}%
+    {HaranoAjiGothic-Regular\zxjf@Fa}{HaranoAjiGothic-Bold\zxjf@Fa}{HaranoAjiGothic-Heavy\zxjf@Fa}%
+    {HaranoAjiGothic-Medium\zxjf@Fa}}
+\zxjf@declare@preproc{haranoaji}{%
+  \zxjf@if@font@exists{HaranoAjiMincho-Regular.otf}%
+    {\def\zxjf@Fa{.otf}}{\let\zxjf@Fa\@empty}}
 %(alias)
 \zxjf@declare@preset@alias@with@prop{kozuka}{kozuka-pro}
 \zxjf@declare@preset@alias@with@prop{morisawa}{morisawa-pro}

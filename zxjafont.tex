@@ -12,8 +12,8 @@
 \bxtexlogoimport{*}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
-\newcommand{\PkgVersion}{1.1}
-\newcommand{\PkgDate}{2020/02/08}
+\newcommand{\PkgVersion}{1.1a}
+\newcommand{\PkgDate}{2020/02/15}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
@@ -324,6 +324,7 @@ Moboフォント（90\JSl 2000JIS字形）を使う設定。
 \item |nothreeweight|\Means
 |threeweight|\>の否定。
 多ウェイト用のメイン設定は2ウェイトのみ使える。
+\Note |(no)threeweight|\>は1.0版で追加された。
 \Note 既定は\>|threeweight|\>であるが、使用中の\Pkg{fontspec}の版が
 古くて追加ウェイトに対応できない場合は\>|nothreeweight|\>が既定になる。
 
@@ -345,6 +346,8 @@ Moboフォント（90\JSl 2000JIS字形）を使う設定。
 既定で用いるのは等幅のフォントだが、
 「欧文のみプロポーショナル」の変種（HGフォントの場合「HGS～」名称のもの）
 がある場合はそれを優先させている。
+\Note 1.1版より、\Pkg{xeCJK}\JSl\Pkg{zxjatype}併用時でも\>|prop|\>が
+指定できるようになった。
 \item |noprop|（既定）\Means
 |prop|\>の否定。
 （和文が）等幅のフォントを用いる。
@@ -370,6 +373,7 @@ Moboフォント（90\JSl 2000JIS字形）を使う設定。
 ほぼないと思われる。
 \item |noignorejatype|（既定）\Means
 |ignorejatype|\>の否定。
+\Note |(no)ignorejatype|\>は1.0版で追加された。
 
 \item |feature={|\Meta{属性リスト}|}|\Means
 このパッケージで指定されるフォント全てに通用する

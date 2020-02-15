@@ -39,6 +39,8 @@ Please refer to the manual `zxjafont.pdf` (in Japanese) for detail.
 Revision History
 ----------------
 
+  * Version 1.1a 〈2020/02/15〉
+      - Adjustment for the revision of NFSS.
   * Version 1.1  〈2020/02/08〉
       - Now `prop` is available even in Japanese-font mode.
   * Version 1.0  〈2020/02/02〉

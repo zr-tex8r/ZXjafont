@@ -10,7 +10,7 @@
 
 %% package declaration
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{zxjafont}[2020/02/22 v1.1b]
+\ProvidesPackage{zxjafont}[2020/02/22 v1.2-pre]
 \def\zxjf@pkgname{zxjafont}
 
 %% preparation
@@ -90,6 +90,7 @@
 \let\zxjf@feature\@empty
 \let\zxjf@jatype\zxjf@jatype@@none
 \newif\ifzxjf@ignore@jatype
+\newif\ifzxjf@expert
 
 %% default for 'threeweight'
 \ifzxjf@fontspec@mw
@@ -143,9 +144,10 @@
 % 'ignorejatype'
 \DeclareOption{ignorejatype}{\zxjf@ignore@jatypetrue}
 \DeclareOption{noignorejatype}{\zxjf@ignore@jatypefalse}
+% 'expert'
+\DeclareOption{expert}{\zxjf@experttrue}
 % dummy options for compatibility with luatexja-preset
 \DeclareOption{match}{}% xeCJK always work as 'match' is on
-\DeclareOption{expert}{\zxjf@warn@niopt{expert}}
 \DeclareOption{fontspec}{}% always on
 \DeclareOption{nfssonly}{\zxjf@warn@niopt{nfssonly}}
 
@@ -232,6 +234,9 @@
   \ifcase\zxjf@cjkshape % none
   \or ,CJKShape=JIS1990% 90jis
   \or ,CJKShape=JIS2004% jis2004
+  \fi
+  \ifzxjf@expert
+    ,Style=HorizontalKana%
   \fi
   \ifdefined\zxjafontFeature
     ,\expandonce\zxjafontFeature

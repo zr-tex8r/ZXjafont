@@ -36,6 +36,8 @@ zxjafont パッケージ ー 本体
 更新履歴
 --------
 
+  * Version 1.1b 〈2020/02/22〉
+      - luatexja-preset との互換のためのオプションを追加。
   * Version 1.1a 〈2020/02/15〉
       - NFSS 改修に対する調整。
   * Version 1.1  〈2020/02/08〉

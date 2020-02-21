@@ -12,8 +12,8 @@
 \bxtexlogoimport{*}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
-\newcommand{\PkgVersion}{1.1a}
-\newcommand{\PkgDate}{2020/02/15}
+\newcommand{\PkgVersion}{1.1b}
+\newcommand{\PkgDate}{2020/02/22}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
@@ -48,6 +48,7 @@
 
 %===========================================================
 \section{使い方}
+\label{sec:Usage}
 
 以下のようにパッケージを読み込むだけである。
 （ユーザ命令・環境はない。）
@@ -66,16 +67,17 @@
 この場合は\JEmph{和文のみ}にフォント設定が適用される。
 
 %-------------------
-\subsection{メイン設定}
+\subsection{メイン設定オプション}
+\label{ssec:Main-Option}
 
-総称ファミリに関する設定、すなわち、
+{\LaTeX}\>の総称ファミリに関するプリセット設定、すなわち、
 \Pkg{fontspec}の\>|\setmainfont|\JSl|\setsansfont|\JSl|\setmonofont|\>%
 （\Pkg{xeCJK}\JSl\Pkg{zxjatype}併用時は\>%
 |\setCJKmainfont|\JSl|\setCJKsansfont|\JSl|\setCJKmonofont|）
 を行うもの。
 
-\Note 「メイン設定」は\Pkg{pxchfon}パッケージにおける
-「プリセット設定」をそのまま
+\Note メイン設定のプリセットは\Pkg{pxchfon}パッケージにおける
+プリセットをそのまま
 引き継いでいる。
 設定内容の詳細については、
 \JEmph{\Pkg{pxchfon}の説明書を参照してほしい}。
@@ -83,7 +85,7 @@
 \Note 1.0版より、\Pkg{pxchfon}パッケージの多ウェイト設定について
 明朝・ゴシックの3ウェイトが全てサポートされるようになった。
 
-\paragraph{単ウェイト用の設定}
+\paragraph{単ウェイト用プリセット}
 明朝・ゴシック各々1ウェイトのみを用いる設定。
 セリフ（|\rmfamily|）に明朝、
 サンセリフ（|\sffamily|）と等幅（|\ttfamily|）にゴシックを割り当てる。
@@ -100,9 +102,9 @@ IPAフォント。
 IPAexフォント。
 \end{itemize}
 \Note {\XeTeX}\>は「フォント非埋込のPDF生成」に対応していないので、
-|noembed| 設定は存在しない。
+|noembed| プリセットは存在しない。
 
-例えば、メイン設定\>|ms|\>は以下の\Pkg{fontspec}の設定を行う：
+例えば、|ms|\>プリセットは以下の\Pkg{fontspec}の設定を行う：
 \begin{quote}\small\begin{verbatim}
 \setmainfont{MS-Mincho}[BoldFont=MS-Gothic]
 \setsansfont{MS-Gothic}[BoldFont=MS-Gothic]
@@ -113,7 +115,7 @@ IPAexフォント。
 和文スケール設定（|Scale|\>オプションキー）が追加される。
 これは以降で紹介する例についても同様である。
 
-\paragraph{多ウェイト用の設定}
+\paragraph{多ウェイト用プリセット}
 セリフ（|\rmfamily|）に明朝、
 サンセリフ（|\sffamily|）と等幅（|\ttfamily|）にゴシックを割り当て、
 各々について中字（|\mdseries|）と太字（|\bfseries|）のフォントを
@@ -126,7 +128,7 @@ IPAexフォント。
 明朝とゴシックの各々について3ウェイトのフォントが
 \Pkg{pxchfon}のプリセットと同様に個別に設定される。
 \Note |threeweight|\>オプションは通常は既定で有効になっている
-（詳細は後述）。
+（詳細は\>\ref{ssec:Other-Option}\>節を参照）。
 
 \begin{itemize}
 \item |ms-hg|\Means
@@ -182,9 +184,12 @@ IPAexフォント。
   原ノ味フォント。
 \end{itemize}
 
-例えば\>|haranoaji|\>オプションについて説明すると、%
+例えば\>|haranoaji|\>プリセットについて説明すると、%
 |threeweight|\>が有効の場合は以下の設定
-（3ウェイト）が行われる：
+（3ウェイト）が行われる%
+\footnote{実際には、状況に応じてフォント名の代わりにファイル名
+（\texttt{*.otf}）での指定に切り替わる。}
+：
 \begin{quote}\small\begin{verbatim}
 \setmainfont{HaranoAjiMincho-Regular}[BoldFont=HaranoAjiMincho-Bold,
     FontFace={l}{n}{HaranoAjiMincho-Light}]
@@ -209,9 +214,10 @@ IPAexフォント。
 \setsansfont{HaranoAjiGothic-Medium}[BoldFont=HaranoAjiGothic-Medium]
 \setmonofont{HaranoAjiGothic-Medium}[BoldFont=HaranoAjiGothic-Medium]
 \end{verbatim}\end{quote}
-\Note 他の例と異なり明朝で“|HaranoAjiGothic-Medium|”%
-（\Pkg{pxchfon}のマニュアルのプリセットの解説で\>|\setgothicfont|\>に
-割り当てられているフォント）が使われていることに注意。
+\Note 他の例と異なり明朝の太字がゴシックとなり、
+かつゴシックとして“|HaranoAjiGothic-Medium|”%
+（\Pkg{pxchfon}プリセットにおいて\>|\setgothicfont|\>に
+割り当てられているフォント）が使われることに注意。
 
 そして\>|bold|\>オプション指定時は以下の設定が行われる：
 \begin{quote}\small\begin{verbatim}
@@ -220,7 +226,7 @@ IPAexフォント。
 \setmonofont{HaranoAjiGothic-Bold}[BoldFont=HaranoAjiGothic-Bold]
 \end{verbatim}\end{quote}
 
-\paragraph{他パッケージとの互換用のオプション}
+\paragraph{他パッケージとの互換用のプリセット}
 \mbox{}
 
 \begin{itemize}
@@ -240,11 +246,11 @@ IPAexフォント。
   |hiragino-pro| の別名。
   （\Pkg{ptex-fontmaps}でのプリセット名。）
   \Note 0.6版で追加。
-  0,4版以前では |hiragino| が別の設定を指していたが、
+  0.4版以前では |hiragino| が別の設定を指していたが、
   これは0.5版で廃止された。
 \end{itemize}
 
-\paragraph{廃止されたプリセット設定}
+\paragraph{廃止されたプリセット}
 
 0.2a版以前で用意されていた次のプリセット設定は、
 0.5版において廃止された。
@@ -259,7 +265,8 @@ IPAexフォント。
 \end{quote}
 
 %-------------------
-\subsection{サブ設定}
+\subsection{サブ設定のオプション}
+\label{ssec:Sub-Option}
 
 \Pkg{fontspec}では使用するフォントを |\newfontfamily| 命令で
 増やすことができる。
@@ -308,30 +315,30 @@ Moboフォント（90\JSl 2000JIS字形）を使う設定。
 
 %-------------------
 \subsection{その他のオプション}
+\label{ssec:Other-Option}
 
 \begin{itemize}
-\item |oneweight|（または|nodeluxe|）\Means
-多ウェイト用のメイン設定を単ウェイトとして用いる。
+\item |oneweight|\Means
+多ウェイト用のプリセットを単ウェイトとして用いる。
 \Note \Pkg{pxchfon}のマニュアルのプリセットの記述に
 おいて\>|\setminchofont|\>と\>|\setgothicfont|\>で設定されている
 ウェイトのフォントが用いられる。
-\item |nooneweight|（または|deluxe|；既定）\Means
+\item |nooneweight|（既定）\Means
 |oneweight|\>の否定。
-\Note |(no)deluxe|\>は\Pkg{luatexja-preset}との互換の別名。
 
 \item |threeweight|（既定）\Means
-多ウェイト用のメイン設定を使う場合に3ウェイトを利用できるようにする。
+多ウェイト用プリセットを使う場合に3ウェイトを利用できるようにする。
 \item |nothreeweight|\Means
 |threeweight|\>の否定。
-多ウェイト用のメイン設定は2ウェイトのみ使える。
+多ウェイト用プリセットは2ウェイトのみ使える。
 \Note |(no)threeweight|\>は1.0版で追加された。
 \Note 既定は\>|threeweight|\>であるが、使用中の\Pkg{fontspec}の版が
 古くて追加ウェイトに対応できない場合は\>|nothreeweight|\>が既定になる。
 
 \item |bold|\Means
-|oneweight|\>と同じく多ウェイト用のメイン設定を単ウェイトとして用いるが、
+|oneweight|\>と同じく多ウェイト用プリセットを単ウェイトとして用いるが、
 この際のゴシック体のフォントとして太字ウェイトに相当するものを用いる。
-\Note \Pkg{pxchfon}の説明書の記述における\>|\setminchofont|\>%
+\Note \Pkg{pxchfon}のプリセットでの\>|\setminchofont|\>%
 と\>|\setboldgothicfont|\>のフォントが用いられる。
 \Note \Pkg{luatexja-preset}とは異なり、|bold|\>の指定自体が
 単ウェイト設定を強制する。
@@ -341,11 +348,11 @@ Moboフォント（90\JSl 2000JIS字形）を使う設定。
 
 \item |prop|\Means
 プロポーショナル幅のフォントを用いる。
-例えば、「IPA明朝」の代わりに「IPA P明朝」、
+例えば「IPA明朝」の代わりに「IPA P明朝」、
 「HGS行書体」の代わりに「HGP行書体」を指定する。
 既定で用いるのは等幅のフォントだが、
 「欧文のみプロポーショナル」の変種（HGフォントの場合「HGS～」名称のもの）
-がある場合はそれを優先させている。
+がある場合はそれを優先させる。
 \Note 1.1版より、\Pkg{xeCJK}\JSl\Pkg{zxjatype}併用時でも\>|prop|\>が
 指定できるようになった。
 \item |noprop|（既定）\Means
@@ -369,8 +376,8 @@ Moboフォント（90\JSl 2000JIS字形）を使う設定。
 たとえ\Pkg{xeCJK}\JSl\Pkg{zxjatype}が読み込まれていたとしても
 それらを無視して、「和文欧文の区別がない」前提の動作を行う。
 \Note この場合「プリセットで指定した日本語フォントが\JEmph{欧文のみ}に
-適用される」という奇妙な動作になるため、このオプションの有用性は
-ほぼないと思われる。
+適用される」という奇妙な動作になる。
+有用性はほぼないと思われるが念のため用意している。
 \item |noignorejatype|（既定）\Means
 |ignorejatype|\>の否定。
 \Note |(no)ignorejatype|\>は1.0版で追加された。
@@ -380,6 +387,18 @@ Moboフォント（90\JSl 2000JIS字形）を使う設定。
 \Pkg{fontspec}の属性の指定。
 既定値は空。
 
+\end{itemize}
+
+\paragraph{他パッケージとの互換用のオプション}
+\Pkg{luatexja-preset}との互換のためのもの。
+
+\begin{itemize}
+\item |deluxe|\JSl|nodeluxe|\Means
+  それぞれ |nooneweight|\JSl|oneweight| の別名。
+\item |match|\JSl|fontspec|\Means
+  “常に有効”であるため、黙って無視される。
+\item |expert|\JSl|nfssonly|\Means
+  非サポートのため警告が出て無視される。
 \end{itemize}
 
 %===========================================================

@@ -523,7 +523,7 @@
 
 \ifzxjf@threeweight
   %%<*> \ltdefault/\ltseries
-  \def\ltdefault{l}
+  \providecommand*\ltdefault{l}
   \DeclareRobustCommand\ltseries{%
     \not@math@alphabet\ltseries\relax
     % \fontseries{\ltdefault} fails on New NFSS
@@ -531,7 +531,7 @@
     \edef\f@series{\ltdefault}\selectfont
   }
   %%<*> \ebdefault/\ebseries
-  \def\ebdefault{eb}
+  \providecommand*\ebdefault{eb}
   \DeclareRobustCommand\ebseries{%
     \not@math@alphabet\ebseries\relax
     \edef\f@series{\ebdefault}\selectfont

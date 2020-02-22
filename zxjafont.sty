@@ -99,6 +99,7 @@
 
 %% \zxjf@all@main@preset
 \zxjf@onlypreamble@def\zxjf@all@main@preset{%
+  nopreset,noembed,%
   %(uniweight)
   ms,ipa,ipaex,%
   %(multiweight)
@@ -374,6 +375,12 @@
   \zxjf@do}
 
 %% definitions of main preset mappings
+\zxjf@declare@preset{nopreset}{}
+\zxjf@declare@preset{noembed}{%
+  \PackageWarningNoLine\zxjf@pkgname
+   {Preset 'noembed' is not supported, because\MessageBreak
+    XeTeX does not support non-embedded fonts,\MessageBreak
+    fallback to preset 'nopreset'}}
 \zxjf@declare@preset{ms}{%
   \zxjf@uniweight{MS-Mincho}{MS-Gothic}{}}
 \zxjf@declare@preset{ms/prop}{%

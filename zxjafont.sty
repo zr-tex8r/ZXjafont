@@ -102,10 +102,11 @@
   %(uniweight)
   ms,ipa,ipaex,%
   %(multiweight)
-  ms-hg,ipa-hg,ipaex-hg,moga,moga-90,ume,%
+  ms-hg,ipa-hg,ipaex-hg,moga,moga-90,mogaN-90,ume,%
   kozuka-pro,kozuka-pr6,kozuka-pr6n,hiragino-pro,hiragino-pron,%
   morisawa-pro,morisawa-pr6n,yu-win,yu-win10,yu-osx,%
   sourcehan,sourcehan-jp,noto,noto-jp,haranoaji,%
+  moga-mobo,moga-mobo-ex,%
   %(alias)
   kozuka,morisawa,moga-mobo-ex,noto-otf,hiragino}
 
@@ -404,11 +405,21 @@
     {HGSGothicM}{HGSGothicE}{hgrsgu.ttc}{\zxjf@Fb}{}}
 \zxjf@declare@preproc@alias{ipaex-hg}{ipaex}
 \zxjf@declare@preset{moga}{%
-  \zxjf@multiweight{MogaExMincho}{MogaExMincho}{MogaExMincho Bold}%
-    {MogaExGothic}{MogaExGothic Bold}{MogaExGothic Bold}{MogaExGothic}{}}
-\zxjf@declare@preset{moga-90}{%
-  \zxjf@multiweight{MogaEx90Mincho}{MogaEx90Mincho}{MogaEx90Mincho Bold}%
-    {MogaEx90Gothic}{MogaEx90Gothic Bold}{MogaEx90Gothic Bold}{MogaEx90Gothic}{}}
+  \zxjf@multiweight{MogaEx\zxjf@Fa Mincho}{MogaEx\zxjf@Fa Mincho}%
+    {MogaEx\zxjf@Fa Mincho Bold}{MogaEx\zxjf@Fa Gothic}%
+    {MogaEx\zxjf@Fa Gothic Bold}{MogaEx\zxjf@Fa Gothic Bold}%
+    {MogaEx\zxjf@Fa Gothic}{}}
+\zxjf@declare@preset@alias{moga-90}{moga}
+\zxjf@declare@preset{mogaN-90}{%
+  \zxjf@multiweight{Moga\zxjf@Fa Mincho}{Moga\zxjf@Fa Mincho}%
+    {Moga\zxjf@Fa Mincho Bold}{Moga\zxjf@Fa Gothic}%
+    {Moga\zxjf@Fa Gothic Bold}{Moga\zxjf@Fa Gothic Bold}%
+    {Moga\zxjf@Fa Gothic}{}}
+\zxjf@declare@preproc{moga}{%
+  \edef\zxjf@Fa{\ifcase\zxjf@cjkshape \or 90\or \fi}}
+\zxjf@declare@preproc{moga-90}{%
+  \edef\zxjf@Fa{\ifcase\zxjf@cjkshape 90\or 90\or \fi}}
+\zxjf@declare@preproc@alias{mogaN-90}{moga-90}
 \zxjf@declare@preset{ume}{%
   \zxjf@multiweight{Ume Mincho}{Ume Mincho}{Ume Mincho}%
     {Ume Gothic}{Ume Gothic O5}{Ume Gothic O5}{Ume Gothic O5}{}}
@@ -478,7 +489,10 @@
 %(alias)
 \zxjf@declare@preset@alias@with@prop{kozuka}{kozuka-pro}
 \zxjf@declare@preset@alias@with@prop{morisawa}{morisawa-pro}
-\zxjf@declare@preset@alias{moga-mobo-ex}{moga}
+\zxjf@declare@preset@alias{moga-mobo-ex}{moga-90}
+\zxjf@declare@preproc@alias{moga-mobo-ex}{moga-90}
+\zxjf@declare@preset@alias{moga-mobo}{mogaN-90}
+\zxjf@declare@preproc@alias{moga-mobo}{mogaN-90}
 \zxjf@declare@preset@alias@with@prop{noto-otf}{noto}
 \zxjf@declare@preset@alias@with@prop{hiragino}{hiragino-pro}
 

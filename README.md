@@ -39,6 +39,10 @@ Please refer to the manual `zxjafont.pdf` (in Japanese) for detail.
 Revision History
 ----------------
 
+  * Version 1.2  〈2020/02/24〉
+      - New option: `expert`.
+      - More options for compatibility with luatexja-preset.
+      - Adjustment of presets involving Moga Fonts.
   * Version 1.1b 〈2020/02/22〉
       - More options for compatibility with luatexja-preset.
   * Version 1.1a 〈2020/02/15〉

@@ -12,8 +12,8 @@
 \bxtexlogoimport{*}
 \usepackage{shortvrb}
 \MakeShortVerb{\|}
-\newcommand{\PkgVersion}{1.1b}
-\newcommand{\PkgDate}{2020/02/22}
+\newcommand{\PkgVersion}{1.2}
+\newcommand{\PkgDate}{2020/02/24}
 \newcommand{\Pkg}[1]{\textsf{#1}}
 \newcommand{\Meta}[1]{$\langle$\mbox{}#1\mbox{}$\rangle$}
 \newcommand{\Note}{\par\noindent ※}
@@ -139,11 +139,20 @@ IPAexフォント。
 \item |ipaex-hg|\Means
   IPAexフォント + HGフォント。
 \item |moga|\Means
-  Mogaフォント（2004JIS字形）。
-  \Note MogaEx系統が用いられる。
+  Mogaフォント（MogaEx；2004JIS字形）。
+  \Note \Pkg{pxchfon}の\>|moga-mobo-ex|（|jis2004|\>有効）と同じで、
+  MogaEx系統が用いられる。
 \item |moga-90|\Means
-  Mogaフォント（90\JSl 2000JIS字形）。
-  \Note MogaEx90系統が用いられる。
+  Mogaフォント（MogaEx；90\JSl 2000JIS字形）。
+  \Note \Pkg{pxchfon}の\>|moga-mobo-ex|（|jis2004|\>無効）と同じで、
+  MogaEx90系統が用いられる。
+\item |mogaN-90|\Means
+  Mogaフォント（Moga；90\JSl 2000JIS字形）。
+  \Note \Pkg{pxchfon}の\>|moga-mobo|（|jis2004|\>無効）と同じで、
+  Moga90系統が用いられる。
+  \Note |moga|\JSl|moga-90|\JSl|mogaN-90|\>の各プリセットは、%
+  |jis2004|\JSl|jis90|\>オプションが併用された場合にはそれに応じて
+  適切な字形をもつフォントの方に切り替える。
 \item |ume|\Means
   梅フォント。
 \item |kozuka-pro|\Means
@@ -168,15 +177,19 @@ IPAexフォント。
   游書体（macOS搭載版）。
 \item |sourcehan|\Means
   Source Han Serif（源ノ明朝）+ Source Han Sans（源ノ角ゴシック）、
-  非サブセット版%TODO
-  \footnote{つまり、地域別サブセットOTF版以外のもの。
-    後掲の |noto| も同じ。}。
+  非サブセット版。%TODO
+  \Note つまり地域別サブセットOTF版以外のもの。
+  フォント名での指定であるため、%
+  \Pkg{pxchfon}の\>|sourcehan|\>と\>|sourcehan-otc|\>の両方と
+  等価である。
 \item |sourcehan-jp|\Means
   Source Han Serif + Source Han Sans、
   日本用地域別サブセット版。
 \item |noto|\Means
   Noto Serif CJK + Noto Sans CJK、
   非サブセット版。
+  \Note |sourcehan|\>と同様の補足事項が当てはまる。
+  \Pkg{pxchfon}の\>|noto|\>と\>|noto-otc|\>の両方と等価。
 \item |noto-jp|\Means
   Noto Serif JP + Noto Sans JP、
   日本用地域別サブセット版。
@@ -214,7 +227,7 @@ IPAexフォント。
 \setsansfont{HaranoAjiGothic-Medium}[BoldFont=HaranoAjiGothic-Medium]
 \setmonofont{HaranoAjiGothic-Medium}[BoldFont=HaranoAjiGothic-Medium]
 \end{verbatim}\end{quote}
-\Note 他の例と異なり明朝の太字がゴシックとなり、
+\Note 先の例と異なり明朝の太字がゴシックとなり、
 かつゴシックとして“|HaranoAjiGothic-Medium|”%
 （\Pkg{pxchfon}プリセットにおいて\>|\setgothicfont|\>に
 割り当てられているフォント）が使われることに注意。
@@ -226,6 +239,17 @@ IPAexフォント。
 \setmonofont{HaranoAjiGothic-Bold}[BoldFont=HaranoAjiGothic-Bold]
 \end{verbatim}\end{quote}
 
+\paragraph{特殊なプリセット}
+\mbox{}
+
+\begin{itemize}
+\item |nopreset|\Means
+  メイン設定を何も行わない。
+  \Note フォントの設定は自分で行うが、それでも何らかの理由で
+  \Pkg{zxjafont}パッケージを読み込みたいという場合に
+  用いることが想定されている。
+\end{itemize}
+
 \paragraph{他パッケージとの互換用のプリセット}
 \mbox{}
 
@@ -236,9 +260,16 @@ IPAexフォント。
 \item |morisawa|\Means
   |morisawa-pro| の別名。
   （\Pkg{ptex-fontmaps}でのプリセット名。）
-\item |moga-mobo-ex|\Means
-  |moga| の別名。
+\item |moga-mobo|\Means
+  |mogaN-90| の別名。
   （\Pkg{ptex-fontmaps}でのプリセット名。）
+\item |moga-mobo-ex|\Means
+  |moga-90| の別名。
+  （\Pkg{ptex-fontmaps}でのプリセット名。）
+  \Note 1.2版より、Moga系プリセットが\>|jis90|\JSl|jis2004|\>での
+  字体指定に従うようになったため、
+  他のパッケージの動作との互換がより高い動作に変更された。
+  現在は既定で90JIS字形になることに注意。
 \item |noto-otf|\Means
   |noto| の別名。
   （\Pkg{luatexja-preset}でのプリセット名。）
@@ -372,6 +403,11 @@ Moboフォント（90\JSl 2000JIS字形）を使う設定。
 \item |nojisshape|（既定）\Means
 特定のJIS字形の使用の指定を行わない。
 
+\item |expert|\Means
+横組専用仮名字形を（可能であれば）利用する。
+\Note \Pkg{luatexja-preset}の\>|expert|\>とは異なり、
+ルビ用字形は未サポート。
+
 \item |ignorejatype|\Means
 たとえ\Pkg{xeCJK}\JSl\Pkg{zxjatype}が読み込まれていたとしても
 それらを無視して、「和文欧文の区別がない」前提の動作を行う。
@@ -396,9 +432,13 @@ Moboフォント（90\JSl 2000JIS字形）を使う設定。
 \item |deluxe|\JSl|nodeluxe|\Means
   それぞれ |nooneweight|\JSl|oneweight| の別名。
 \item |match|\JSl|fontspec|\Means
-  “常に有効”であるため、黙って無視される。
-\item |expert|\JSl|nfssonly|\Means
+  これらの機能は“常に有効”と考えられるため、黙って無視される。
+\item |nfssonly|\Means
   非サポートのため警告が出て無視される。
+\item |noembed|\Means
+  \ref{ssec:Main-Option}で述べた通り、非埋込の設定はサポートできない
+  ので、警告が出た上で、|nopreset|\>プリセットが指定されたものと
+  見なされる。
 \end{itemize}
 
 %===========================================================

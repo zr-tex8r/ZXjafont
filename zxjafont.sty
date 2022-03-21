@@ -253,8 +253,10 @@
 %--------------------------------------- font setup helpers
 
 %% \zxjf@font@set
-\zxjf@onlypreamble@def\zxjf@font@set#1#2{%
-  \noexpand#1[\expandonce\zxjf@whole@feature,#2]}
+\zxjf@onlypreamble@def\zxjf@font@set#1#2#3{%
+  \edef\zxjf@do{\noexpand#1[\expandonce\zxjf@whole@feature,#2]{#3}}%
+  \bxDebug{run:\meaning\zxjf@do}%
+  \zxjf@do}
 %% \zxjf@newfamily@gen\CSnewjafamily
 \@onlypreamble\zxjf@newfamily@gen\edef\zxjf@newfamily@gen{%
   \noexpand\zxjf@newfamily@gen@a
@@ -268,19 +270,19 @@
 
 %% \zxjf@setmainfont{<attributes>}{<fam_name>}, etc.
 \ifnum\zxjf@jatype=\zxjf@jatype@@xeCJK
-\edef\zxjf@setmainfont#1{\zxjf@font@set\setCJKmainfont{#1}}
-\edef\zxjf@setsansfont#1{\zxjf@font@set\setCJKsansfont{#1}}
-\edef\zxjf@setmonofont#1{\zxjf@font@set\setCJKmonofont{#1}}
+\def\zxjf@setmainfont{\zxjf@font@set\setCJKmainfont}
+\def\zxjf@setsansfont{\zxjf@font@set\setCJKsansfont}
+\def\zxjf@setmonofont{\zxjf@font@set\setCJKmonofont}
 \zxjf@newfamily@gen{\setCJKfamilyfont}
 \else\ifnum\zxjf@jatype=\zxjf@jatype@@zxjatype
-\edef\zxjf@setmainfont#1{\zxjf@font@set\setjamainfont{#1}}
-\edef\zxjf@setsansfont#1{\zxjf@font@set\setjasansfont{#1}}
-\edef\zxjf@setmonofont#1{\zxjf@font@set\setjamonofont{#1}}
+\def\zxjf@setmainfont{\zxjf@font@set\setjamainfont}
+\def\zxjf@setsansfont{\zxjf@font@set\setjasansfont}
+\def\zxjf@setmonofont{\zxjf@font@set\setjamonofont}
 \zxjf@newfamily@gen{\setjafamilyfont}
 \else
-\edef\zxjf@setmainfont#1{\zxjf@font@set\setmainfont{#1}}
-\edef\zxjf@setsansfont#1{\zxjf@font@set\setsansfont{#1}}
-\edef\zxjf@setmonofont#1{\zxjf@font@set\setmonofont{#1}}
+\def\zxjf@setmainfont{\zxjf@font@set\setmainfont}
+\def\zxjf@setsansfont{\zxjf@font@set\setsansfont}
+\def\zxjf@setmonofont{\zxjf@font@set\setmonofont}
 \edef\zxjf@newfamily#1#2{%
   \unexpanded{\zxjf@with@cs\newfontfamily}{#1family}%
       [\expandonce\zxjf@whole@feature,#2]}
@@ -288,63 +290,53 @@
 
 %--------------------------------------- preset japanese font mappings
 
-%% \zxjf@declare@preset{<name>}{<text>}, etc.
+%% \zxjf@declare@preset{<name>}{<text>}
 \zxjf@onlypreamble@def\zxjf@declare@preset#1{%
   \zxjf@with@cs\zxjf@onlypreamble@def{zxjf@the@preset@#1}}
 \zxjf@declare@preset{}{}
-\ifzxjf@fontspec@mw %TODO: temporary fix
+%% \zxjf@uniweight{<mincho>}{<gothic>}{<feats>}
 \zxjf@onlypreamble@def\zxjf@uniweight#1#2#3{%
-  \zxjf@setmainfont{#3,FontFace={bx}{n}{#2},BoldFont=#2}{#1}%
-  \zxjf@setsansfont{#3,FontFace={bx}{n}{#2},BoldFont=#2}{#2}%
-  \zxjf@setmonofont{#3,FontFace={bx}{n}{#2},BoldFont=#2}{#2}}
+  \zxjf@setmainfont{#3,\zxjf@BoldFont{#2}}{#1}%
+  \zxjf@setsansfont{#3,\zxjf@BoldFont{#2}}{#2}%
+  \zxjf@setmonofont{#3,\zxjf@BoldFont{#2}}{#2}}
+%% \zxjf@multiweight{ML}{MM}{MB}{GM}{GB}{GE}{GU}{<feats>}
 \zxjf@onlypreamble@def\zxjf@multiweight#1#2#3#4#5#6#7#8{%
   \ifzxjf@bold
-    \zxjf@setmainfont{#8,FontFace={bx}{n}{#5},BoldFont=#5}{#2}%
-    \zxjf@setsansfont{#8,FontFace={bx}{n}{#5},BoldFont=#5}{#5}%
-    \zxjf@setmonofont{#8,FontFace={bx}{n}{#5},BoldFont=#5}{#5}%
+    \zxjf@setmainfont{#8,\zxjf@BoldFont{#5}}{#2}%
+    \zxjf@setsansfont{#8,\zxjf@BoldFont{#5}}{#5}%
+    \zxjf@setmonofont{#8,\zxjf@BoldFont{#5}}{#5}%
   \else\ifzxjf@oneweight
-    \zxjf@setmainfont{#8,FontFace={bx}{n}{#7},BoldFont=#7}{#2}%
-    \zxjf@setsansfont{#8,FontFace={bx}{n}{#7},BoldFont=#7}{#7}%
-    \zxjf@setmonofont{#8,FontFace={bx}{n}{#7},BoldFont=#7}{#7}%
+    \zxjf@setmainfont{#8,\zxjf@BoldFont{#7}}{#2}%
+    \zxjf@setsansfont{#8,\zxjf@BoldFont{#7}}{#7}%
+    \zxjf@setmonofont{#8,\zxjf@BoldFont{#7}}{#7}%
   \else\ifzxjf@threeweight
-    \zxjf@setmainfont{#8,FontFace={bx}{n}{#3},BoldFont=#3,
-        FontFace={l}{n}{#1}}{#2}%
-    \zxjf@setsansfont{#8,FontFace={bx}{n}{#5},BoldFont=#5,
-        FontFace={eb}{n}{#6}}{#4}%
-    \zxjf@setmonofont{#8,FontFace={bx}{n}{#5},BoldFont=#5,
-        FontFace={eb}{n}{#6}}{#4}%
+    \zxjf@check@extra@font\zxjf@Fx{#1}{#2}%
+    \zxjf@setmainfont{#8,\zxjf@BoldFont{#3},
+        FontFace={l}{n}{\zxjf@Fx}}{#2}%
+    \zxjf@check@extra@font\zxjf@Fx{#6}{#5}%
+    \zxjf@setsansfont{#8,\zxjf@BoldFont{#5},
+        FontFace={eb}{n}{\zxjf@Fx}}{#4}%
+    \zxjf@setmonofont{#8,\zxjf@BoldFont{#5},
+        FontFace={eb}{n}{\zxjf@Fx}}{#4}%
   \else
-    \zxjf@setmainfont{#8,FontFace={bx}{n}{#3},BoldFont=#3}{#2}%
-    \zxjf@setsansfont{#8,FontFace={bx}{n}{#5},BoldFont=#5}{#4}%
-    \zxjf@setmonofont{#8,FontFace={bx}{n}{#5},BoldFont=#5}{#4}%
+    \zxjf@setmainfont{#8,\zxjf@BoldFont{#3}}{#2}%
+    \zxjf@setsansfont{#8,\zxjf@BoldFont{#5}}{#4}%
+    \zxjf@setmonofont{#8,\zxjf@BoldFont{#5}}{#4}%
   \fi\fi\fi}
+%% \zxjf@BoldFont{<name>}
+\ifzxjf@fontspec@mw
+  \zxjf@onlypreamble@def\zxjf@BoldFont#1{FontFace={bx}{n}{#1},BoldFont=#1}
 \else
-\zxjf@onlypreamble@def\zxjf@uniweight#1#2#3{%
-  \zxjf@setmainfont{#3,BoldFont=#2}{#1}%
-  \zxjf@setsansfont{#3,BoldFont=#2}{#2}%
-  \zxjf@setmonofont{#3,BoldFont=#2}{#2}}
-\zxjf@onlypreamble@def\zxjf@multiweight#1#2#3#4#5#6#7#8{%
-  \ifzxjf@bold
-    \zxjf@setmainfont{#8,BoldFont=#5}{#2}%
-    \zxjf@setsansfont{#8,BoldFont=#5}{#5}%
-    \zxjf@setmonofont{#8,BoldFont=#5}{#5}%
-  \else\ifzxjf@oneweight
-    \zxjf@setmainfont{#8,BoldFont=#7}{#2}%
-    \zxjf@setsansfont{#8,BoldFont=#7}{#7}%
-    \zxjf@setmonofont{#8,BoldFont=#7}{#7}%
-  \else\ifzxjf@threeweight
-    \zxjf@setmainfont{#8,BoldFont=#3,
-        FontFace={l}{n}{#1}}{#2}%
-    \zxjf@setsansfont{#8,BoldFont=#5,
-        FontFace={eb}{n}{#6}}{#4}%
-    \zxjf@setmonofont{#8,BoldFont=#5,
-        FontFace={eb}{n}{#6}}{#4}%
-  \else
-    \zxjf@setmainfont{#8,BoldFont=#3}{#2}%
-    \zxjf@setsansfont{#8,BoldFont=#5}{#4}%
-    \zxjf@setmonofont{#8,BoldFont=#5}{#4}%
-  \fi\fi\fi}
+  \zxjf@onlypreamble@def\zxjf@BoldFont#1{BoldFont=#1}
 \fi
+%% \zxjf@check@extra@font\CS{<target>}{<replace>}
+\zxjf@onlypreamble@def\zxjf@check@extra@font#1#2#3{%
+  \zxjf@if@font@exists{#2}{\def#1{#2}}{%else
+    \PackageWarningNoLine\zxjf@pkgname
+     {Font '#2' is not found,\MessageBreak
+      substituted by '#3'}%
+    \def#1{#3}}}
+
 %% \zxjf@declare@preset@with@prop{<name>}{<text>}
 \zxjf@onlypreamble@def\zxjf@declare@preset@with@prop#1#2{%
   \zxjf@declare@preset{#1}{#2{RawFeature=-palt;-kern}}%

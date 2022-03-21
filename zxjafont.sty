@@ -211,7 +211,7 @@
   % If zxjatype is used, try \zxjatypeJaScale, \zxjt@scale,
   % and \__zxjt_scale_tl.
   \ifnum\zxjf@jatype=\zxjf@jatype@@zxjatype
-    \ifdefined\zxjatypeJaScale \let\zxjf@scale\zxjatypeJaScale
+    \if\zxjf@isvalid{zxjatypeJaScale}\let\zxjf@scale\zxjatypeJaScale
     \else\if\zxjf@isvalid{zxjt@scale}\let\zxjf@scale\zxjt@scale
     \else\if\zxjf@isvalid{__zxjt_scale_tl}%
       \letcs\zxjf@scale{__zxjt_scale_tl}

@@ -180,7 +180,7 @@
   \PackageError\zxjf@pkgname
    {Preset name not specified}
    {You must give one of the following names as option.\MessageBreak
-    \space\space\zxjf@all@main@preset}
+    \zxjf@all@main@preset}
 \expandafter\endinput\fi\relax
 
 %% detect zxjatype/xeCJK
@@ -200,7 +200,7 @@
 %% check for 'threeweight'
 \unless\ifzxjf@fontspec@mw\ifzxjf@threeweight
   \PackageError\zxjf@pkgname
-   {Option 'threeweight' cannot be used, bebause\MessageBreak
+   {Option 'threeweight' cannot be used, because\MessageBreak
     your 'fontspec' is too old}
    {\@ehc}
   \zxjf@threeweightfalse
@@ -246,7 +246,7 @@
   \unless\ifx\zxjf@feature\@empty
     ,\expandonce\zxjf@feature
   \fi}
-\bxDebug{zxjafont>>scale=\zxjf@scale/feat={\zxjf@whole@feature}/%
+\bxDebug{zxjafont>>feature={\zxjf@whole@feature}/%
   preset=\zxjf@main@preset/\zxjf@sub@preset}
 
 %--------------------------------------- font setup helpers

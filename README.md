@@ -39,6 +39,10 @@ Please refer to the manual `zxjafont.pdf` (in Japanese) for detail.
 Revision History
 ----------------
 
+  * Version 1.3  〈2022/03/21〉
+      - When the fonts for “Light Mincho” and “Extrabold Gothic” are
+        not found, the ones for “Medium Mincho” and “Bold Gothic”
+        respectively are used as fallback.
   * Version 1.2  〈2020/02/24〉
       - New option: `expert`.
       - More options for compatibility with luatexja-preset.
